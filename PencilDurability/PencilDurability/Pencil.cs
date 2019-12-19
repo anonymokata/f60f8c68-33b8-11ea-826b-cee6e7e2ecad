@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace PencilDurability
 {
@@ -20,17 +21,14 @@ namespace PencilDurability
 
         public void Write(Paper paper, string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                paper.Text = text;
-            }
-            else if (!_isDullable || _durability > 0)
+            if (!_isDullable || _durability > 0)
             {
                 paper.Text += text;
             }
             else
             {
-                paper.Text += new string(' ', text.Length);
+                const string matchNonWhitespace = @"\S";
+                paper.Text += Regex.Replace(text, matchNonWhitespace, replacement: " ");
             }
         }
     }

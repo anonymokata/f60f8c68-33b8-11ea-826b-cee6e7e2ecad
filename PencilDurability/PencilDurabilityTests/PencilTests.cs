@@ -77,8 +77,19 @@ namespace PencilDurabilityTests
             Assert.Equal(testWhitespace, paper.Text);
         }
 
-        // pencil with no durability
-        //    does not exclude whitespace characters in the middle of text
+        [Fact]
+        public void PencilWithNoDurabilityKeepsWhitespaceInMiddleOfText()
+        {
+            const int noDurability = 0;
+            var pencil = new Pencil(noDurability);
+            var paper = new Paper();
+            const string testSentence = "\vT\this is a\t sentence\n with whi\r\ntespace chara\ncters.\f";
+            const string expectedText = "\v \t        \t         \n         \r\n             \n      \f";
+
+            pencil.Write(paper, testSentence);
+
+            Assert.Equal(expectedText, paper.Text);
+        }
 
         // whitespace degrades by 0 (\t\r\n\f\v) & ' '
         // lowercase degrade by 1

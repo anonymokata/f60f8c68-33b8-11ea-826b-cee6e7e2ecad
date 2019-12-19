@@ -5,8 +5,10 @@ namespace PencilDurability
 {
     public class Pencil
     {
+
         private int _durability;
         private readonly bool _isDullable;
+        private const int _LowercaseDegradeValue = 1;
 
         public Pencil()
         {
@@ -19,10 +21,14 @@ namespace PencilDurability
             _durability = durability;
         }
 
+        public int CurrentDurability => _durability;
+
         public void Write(Paper paper, string text)
         {
+            _durability--;
+
             if (!_isDullable || _durability > 0)
-            {
+            {                
                 paper.Text += text;
             }
             else

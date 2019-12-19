@@ -91,8 +91,29 @@ namespace PencilDurabilityTests
             Assert.Equal(expectedText, paper.Text);
         }
 
+        [Fact]
+        public void DurabilityShouldDegradeByOneWritingLowercase()
+        {
+            const string lowercaseLetter = "a";
+            const int lowercaseDegradeValue = 1;
+            const int startDurability = 5;
+            var pencil = new Pencil(startDurability);
+            var paper = new Paper();
+
+            pencil.Write(paper, lowercaseLetter);
+
+            Assert.Equal(startDurability - lowercaseDegradeValue, pencil.CurrentDurability);
+        }
+
         // whitespace degrades by 0 (\t\r\n\f\v) & ' '
         // lowercase degrade by 1
         // capitals degrade by 2
+
+        // what about punctuation and numbers?
+        //  (1p?)  qwertyuiopasdfghjklzxcvbnm 1234567890  |:"<>?\;',./*_+^`~![]{}()
+        //  (2p?)  QWERTYUIOPASDFGHJKLZXCVBNM &@#$%
+
+        // what happens when you have 1 point and try to write a capital?
+        //    writes a space and doesn't degrade?
     }
 }

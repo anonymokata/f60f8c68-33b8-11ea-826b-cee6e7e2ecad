@@ -33,7 +33,7 @@ namespace PencilDurabilityTests
         }
 
         [Fact]
-        public void PencilWithNoDurabilityWritesWhitespace()
+        public void PencilWithNoDurabilityWritesSpaces()
         {
             const int noDurability = 0;
             var pencil = new Pencil(noDurability);
@@ -44,9 +44,26 @@ namespace PencilDurabilityTests
 
             Assert.Empty(paper.Text);
         }
-        // after pencil is dull, all chars appear as whitespace
 
-        // whitespace degrades by 0
+        [Fact]
+        public void PencilWithNoDurabilityStillWritesWhitespaceCharacters()
+        {
+            const int noDurability = 0;
+            var pencil = new Pencil(noDurability);
+            var paper = new Paper();
+            const string testWhitespace = "  \t\r\n\f\v  ";
+
+            pencil.Write(paper, testWhitespace);
+
+            Assert.Equal(testWhitespace, paper.Text);
+        }
+
+        // pencil with no durability
+        //    writes correct number of spaces
+        //    does not exclude whitespace characters in the middle of text
+        //    appends whitespace to existing text    
+
+        // whitespace degrades by 0 (\t\r\n\f\v) & ' '
         // lowercase degrade by 1
         // capitals degrade by 2
     }

@@ -20,7 +20,12 @@ namespace PencilDurability
 
         public void Write(Paper paper, string text)
         {
-            if (!_isDullable || (_isDullable && _durability > 0))
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                paper.Text = text;
+            }
+
+            if (!_isDullable || _durability > 0)
             {
                 paper.Text += text;
             }

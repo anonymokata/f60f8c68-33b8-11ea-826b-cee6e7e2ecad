@@ -136,6 +136,24 @@ namespace PencilDurabilityTests
             Assert.Equal(startDurability - uppercaseDegradeValue, pencil.CurrentDurability);
         }
 
+        [Theory]
+        [InlineData("AB")]
+        [InlineData("CDEFG")]
+        [InlineData("HIJKLMN")]
+        [InlineData("OPQRSTUVWXYZ")]
+        public void DurabilityShouldDegradeCorrectlyForManyUppercase(string uppercaseLetters)
+        {
+            const int startDurability = 40;
+            const int uppercaseDegradeValue = 2;
+            int expectedDurability = startDurability - (uppercaseLetters.Length * uppercaseDegradeValue);
+            var pencil = new Pencil(startDurability);
+            var paper = new Paper();
+
+            pencil.Write(paper, uppercaseLetters);
+
+            Assert.Equal(expectedDurability, pencil.CurrentDurability);
+        }
+
         // whitespace degrades by 0 (\t\r\n\f\v) & ' '
         // lowercase degrade by 1
         // capitals degrade by 2

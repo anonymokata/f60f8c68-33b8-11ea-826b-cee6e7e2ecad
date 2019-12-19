@@ -30,7 +30,7 @@ namespace PencilDurability
 
             if (Regex.IsMatch(text, "[A-Z]"))
             {
-                _durability--;
+                _durability -= text.Length;
             }
 
             if (!_isDullable || _durability > 0)

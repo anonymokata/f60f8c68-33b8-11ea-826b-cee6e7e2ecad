@@ -47,6 +47,24 @@ namespace PencilDurabilityTests
         }
 
         [Fact]
+        public void PencilWithNoDurabilityAppendsSpacesToText()
+        {
+            const int noDurability = 0;
+            var pencil = new Pencil(noDurability);
+            var paper = new Paper();
+
+            const string preexistingText = "This already exists.";
+            const string testSentence = " This should not be written.";
+            const string expectedSpaces = "                            ";
+
+            paper.Text = preexistingText;
+
+            pencil.Write(paper, testSentence);
+
+            Assert.Equal(preexistingText + expectedSpaces, paper.Text);
+        }
+
+        [Fact]
         public void PencilWithNoDurabilityStillWritesWhitespaceCharacters()
         {
             const int noDurability = 0;
@@ -60,9 +78,7 @@ namespace PencilDurabilityTests
         }
 
         // pencil with no durability
-        //    writes correct number of spaces
         //    does not exclude whitespace characters in the middle of text
-        //    appends whitespace to existing text    
 
         // whitespace degrades by 0 (\t\r\n\f\v) & ' '
         // lowercase degrade by 1

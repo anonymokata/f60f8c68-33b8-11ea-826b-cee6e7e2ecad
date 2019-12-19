@@ -30,7 +30,7 @@ namespace PencilDurability
             }
             else
             {
-                paper.Text = new string(' ', text.Length);
+                paper.Text += new string(' ', text.Length);
             }
         }
     }

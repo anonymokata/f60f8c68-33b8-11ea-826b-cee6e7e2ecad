@@ -9,6 +9,7 @@ namespace PencilDurability
         private int _durability;
         private readonly bool _isDullable;
         private const int _LowercaseDegradeValue = 1;
+        private const int _UppercaseDegradeValue = 2;
 
         public Pencil()
         {
@@ -26,6 +27,11 @@ namespace PencilDurability
         public void Write(Paper paper, string text)
         {
             _durability -= text.Length;
+
+            if (Regex.IsMatch(text, "[A-Z]"))
+            {
+                _durability--;
+            }
 
             if (!_isDullable || _durability > 0)
             {

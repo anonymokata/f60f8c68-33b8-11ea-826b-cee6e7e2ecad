@@ -31,5 +31,23 @@ namespace PencilDurabilityTests
 
             Assert.Equal(testSentence1 + testSentence2, paper.Text);
         }
+
+        [Fact]
+        public void PencilWithNoDurabilityWritesWhitespace()
+        {
+            const int noDurability = 0;
+            var pencil = new Pencil(noDurability);
+            var paper = new Paper();
+            const string testSentence = "This should not be written.";
+
+            pencil.Write(paper, testSentence);
+
+            Assert.Empty(paper.Text);
+        }
+        // after pencil is dull, all chars appear as whitespace
+
+        // whitespace degrades by 0
+        // lowercase degrade by 1
+        // capitals degrade by 2
     }
 }

@@ -26,11 +26,17 @@ namespace PencilDurability
 
         public void Write(Paper paper, string text)
         {
-            _durability -= text.Length;
-
-            if (Regex.IsMatch(text, "[A-Z]"))
+            for (int i = 0; i < text.Length; i++)
             {
-                _durability -= text.Length;
+                string currentLetter = text[i].ToString();
+                if (Regex.IsMatch(currentLetter, "[A-Z]"))
+                {
+                    _durability -= _UppercaseDegradeValue;
+                }
+                else if (Regex.IsMatch(currentLetter, "[a-z]"))
+                {
+                    _durability -= _LowercaseDegradeValue;
+                }
             }
 
             if (!_isDullable || _durability > 0)

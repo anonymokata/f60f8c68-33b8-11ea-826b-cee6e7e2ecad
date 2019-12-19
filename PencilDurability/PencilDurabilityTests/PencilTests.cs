@@ -154,6 +154,25 @@ namespace PencilDurabilityTests
             Assert.Equal(expectedDurability, pencil.CurrentDurability);
         }
 
+        [Theory]
+        [InlineData("Ah", 3)]
+        [InlineData("rD", 3)]
+        [InlineData("LEMDalsjLEKD", 20)]
+        [InlineData("lsieLDOIlskd", 16)]
+        [InlineData("LeLoFlEo", 12)]
+        [InlineData("eLfOrG", 9)]
+        public void DurabilityShouldDegradeCorrectlyForMixedCase(string mixedCase, int degradeAmount)
+        {
+            const int startDurability = 40;
+            int expectedDurability = startDurability - degradeAmount;
+            var pencil = new Pencil(startDurability);
+            var paper = new Paper();
+
+            pencil.Write(paper, mixedCase);
+
+            Assert.Equal(expectedDurability, pencil.CurrentDurability);
+        }
+        
         // whitespace degrades by 0 (\t\r\n\f\v) & ' '
         // lowercase degrade by 1
         // capitals degrade by 2

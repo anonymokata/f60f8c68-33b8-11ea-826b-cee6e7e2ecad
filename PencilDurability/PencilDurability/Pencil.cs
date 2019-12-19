@@ -24,10 +24,13 @@ namespace PencilDurability
             {
                 paper.Text = text;
             }
-
-            if (!_isDullable || _durability > 0)
+            else if (!_isDullable || _durability > 0)
             {
                 paper.Text += text;
+            }
+            else
+            {
+                paper.Text = new string(' ', text.Length);
             }
         }
     }

@@ -33,16 +33,17 @@ namespace PencilDurabilityTests
         }
 
         [Fact]
-        public void PencilWithNoDurabilityWritesSpaces()
+        public void PencilWithNoDurabilityWritesCorrectNumberOfSpaces()
         {
             const int noDurability = 0;
             var pencil = new Pencil(noDurability);
             var paper = new Paper();
             const string testSentence = "This should not be written.";
+            const string expectedSpaces = "                           ";
 
             pencil.Write(paper, testSentence);
 
-            Assert.Empty(paper.Text);
+            Assert.Equal(expectedSpaces, paper.Text);
         }
 
         [Fact]

@@ -6,7 +6,7 @@ namespace PencilDurability
     {
         public void Write(Paper paper, string text)
         {
-            paper.Text = text;
+            paper.Text += text;
         }
     }
 }

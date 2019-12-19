@@ -25,10 +25,10 @@ namespace PencilDurability
 
         public void Write(Paper paper, string text)
         {
-            _durability--;
+            _durability -= text.Length;
 
             if (!_isDullable || _durability > 0)
-            {                
+            {
                 paper.Text += text;
             }
             else

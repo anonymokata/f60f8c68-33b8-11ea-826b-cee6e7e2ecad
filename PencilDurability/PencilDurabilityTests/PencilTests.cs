@@ -3,7 +3,7 @@ using Xunit;
 
 namespace PencilDurabilityTests
 {
-    public class UnitTest1
+    public class PencilTests
     {
         [Fact]
         public void Test1()

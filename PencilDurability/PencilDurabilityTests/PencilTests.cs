@@ -1,6 +1,6 @@
-using System;
 using Xunit;
 using PencilDurability;
+using System;
 
 namespace PencilDurabilityTests
 {
@@ -223,9 +223,22 @@ namespace PencilDurabilityTests
             Assert.Equal(noDurability, pencil.CurrentDurability);
         }
 
-        // durability should not become negative
-        //     if would become negative, write a space.
-        // all characters not explicitly Uppercase or whitespace will be considered lowercase.
+        [Fact]
+        public void ShouldNotWriteUppercaseIfNotEnoughDurability()
+        {
+            const int startDurability = 2;
+            const string testString = "aTat";
+            const string expectedText = "a a ";
+            var pencil = new Pencil(startDurability);
+            var paper = new Paper();
+
+            pencil.Write(paper, testString);
+
+            Assert.Equal(expectedText, paper.Text);
+        }
+
+        // TODO: if would become negative, write a space. (Write T but only 1 durability.)
+        // TODO: all characters not explicitly Uppercase or whitespace will be considered lowercase.
 
     }
 }

@@ -7,99 +7,103 @@ namespace PencilDurabilityTests
     public class PencilTests
     {
         // TODO: all characters not explicitly Uppercase or whitespace will be considered lowercase.
+        private readonly Paper _arbitraryPaper;
+        private readonly int _arbitraryDurability;
+        private readonly int _arbitraryLength;
 
-        public class Writing
+        public PencilTests()
+        {
+            _arbitraryPaper = new Paper();
+            _arbitraryDurability = 999999;
+            _arbitraryLength = 99999;
+        }
+
+        public class Writing : PencilTests
         {
             [Fact]
             public void ShouldWriteToPaper()
             {
-                var pencil = new Pencil();
-                var paper = new Paper();
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
                 const string testSentence = "This is a sentence.";
 
-                pencil.Write(paper, testSentence);
+                pencil.Write(_arbitraryPaper, testSentence);
 
-                Assert.Equal(testSentence, paper.Text);
+                Assert.Equal(testSentence, _arbitraryPaper.Text);
             }
 
             [Fact]
             public void ShouldAppendToPreExistingText()
             {
-                var pencil = new Pencil();
-                var paper = new Paper();
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
                 const string testSentence1 = "This is a sentence.";
                 const string testSentence2 = " This is another sentence.";
-                paper.Text = testSentence1;
+                _arbitraryPaper.Text = testSentence1;
 
-                pencil.Write(paper, testSentence2);
+                pencil.Write(_arbitraryPaper, testSentence2);
 
-                Assert.Equal(testSentence1 + testSentence2, paper.Text);
+                Assert.Equal(testSentence1 + testSentence2, _arbitraryPaper.Text);
             }
         }
 
-        public class PencilWithNoDurability
+        public class PencilWithNoDurability : PencilTests
         {
             [Fact]
             public void ShouldWriteCorrectNumberOfSpaces()
             {
                 const int noDurability = 0;
-                var pencil = new Pencil(noDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(noDurability, _arbitraryLength);
                 const string testSentence = "This should not be written.";
                 const string expectedSpaces = "                           ";
 
-                pencil.Write(paper, testSentence);
+                pencil.Write(_arbitraryPaper, testSentence);
 
-                Assert.Equal(expectedSpaces, paper.Text);
+                Assert.Equal(expectedSpaces, _arbitraryPaper.Text);
             }
 
             [Fact]
             public void ShouldAppendSpacesToText()
             {
                 const int noDurability = 0;
-                var pencil = new Pencil(noDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(noDurability, _arbitraryLength);
 
                 const string preexistingText = "This already exists.";
                 const string testSentence = " This should not be written.";
                 const string expectedSpaces = "                            ";
 
-                paper.Text = preexistingText;
+                _arbitraryPaper.Text = preexistingText;
 
-                pencil.Write(paper, testSentence);
+                pencil.Write(_arbitraryPaper, testSentence);
 
-                Assert.Equal(preexistingText + expectedSpaces, paper.Text);
+                Assert.Equal(preexistingText + expectedSpaces, _arbitraryPaper.Text);
             }
 
             [Fact]
             public void ShouldWriteWhitespaceCharacters()
             {
                 const int noDurability = 0;
-                var pencil = new Pencil(noDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(noDurability, _arbitraryLength);
                 const string testWhitespace = "  \t\r\n\f\v  ";
 
-                pencil.Write(paper, testWhitespace);
+                pencil.Write(_arbitraryPaper, testWhitespace);
 
-                Assert.Equal(testWhitespace, paper.Text);
+                Assert.Equal(testWhitespace, _arbitraryPaper.Text);
             }
 
             [Fact]
             public void ShouldKeepWhitespaceInMiddleOfText()
             {
                 const int noDurability = 0;
-                var pencil = new Pencil(noDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(noDurability, _arbitraryLength);
                 const string testSentence = "\vT\this is a\t sentence\n with whi\r\ntespace chara\ncters.\f";
                 const string expectedText = "\v \t        \t         \n         \r\n             \n      \f";
 
-                pencil.Write(paper, testSentence);
+                pencil.Write(_arbitraryPaper, testSentence);
 
-                Assert.Equal(expectedText, paper.Text);
+                Assert.Equal(expectedText, _arbitraryPaper.Text);
             }
         }
 
-        public class PencilWithDurability
+        public class PencilWithDurability : PencilTests
         {
             [Fact]
             public void ShouldWritePartOfTheSentenceWithoutEnoughDurability()
@@ -107,12 +111,11 @@ namespace PencilDurabilityTests
                 const int durability = 26;
                 const string testSentence = "This should not be written and This should not be written";
                 const string expectedSentence = "This should not be written and                           ";
-                var pencil = new Pencil(durability);
-                var paper = new Paper();
+                var pencil = new Pencil(durability, _arbitraryLength);
 
-                pencil.Write(paper, testSentence);
+                pencil.Write(_arbitraryPaper, testSentence);
 
-                Assert.Equal(expectedSentence, paper.Text);
+                Assert.Equal(expectedSentence, _arbitraryPaper.Text);
             }
 
             [Fact]
@@ -121,12 +124,11 @@ namespace PencilDurabilityTests
                 const int startDurability = 2;
                 const string testString = "aTat";
                 const string expectedText = "a a ";
-                var pencil = new Pencil(startDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(startDurability, _arbitraryLength);
 
-                pencil.Write(paper, testString);
+                pencil.Write(_arbitraryPaper, testString);
 
-                Assert.Equal(expectedText, paper.Text);
+                Assert.Equal(expectedText, _arbitraryPaper.Text);
             }
 
             [Fact]
@@ -135,10 +137,9 @@ namespace PencilDurabilityTests
                 const string lowercaseLetter = "a";
                 const int lowercaseDegradeValue = 1;
                 const int startDurability = 5;
-                var pencil = new Pencil(startDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(startDurability, _arbitraryLength);
 
-                pencil.Write(paper, lowercaseLetter);
+                pencil.Write(_arbitraryPaper, lowercaseLetter);
 
                 Assert.Equal(startDurability - lowercaseDegradeValue, pencil.CurrentDurability);
             }
@@ -152,10 +153,9 @@ namespace PencilDurabilityTests
             {
                 const int startDurability = 20;
                 int expectedDurability = startDurability - lowercaseLetters.Length;
-                var pencil = new Pencil(startDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(startDurability, _arbitraryLength);
 
-                pencil.Write(paper, lowercaseLetters);
+                pencil.Write(_arbitraryPaper, lowercaseLetters);
 
                 Assert.Equal(expectedDurability, pencil.CurrentDurability);
             }
@@ -166,10 +166,9 @@ namespace PencilDurabilityTests
                 const string uppercaseLetter = "A";
                 const int uppercaseDegradeValue = 2;
                 const int startDurability = 5;
-                var pencil = new Pencil(startDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(startDurability, _arbitraryLength);
 
-                pencil.Write(paper, uppercaseLetter);
+                pencil.Write(_arbitraryPaper, uppercaseLetter);
 
                 Assert.Equal(startDurability - uppercaseDegradeValue, pencil.CurrentDurability);
             }
@@ -184,10 +183,9 @@ namespace PencilDurabilityTests
                 const int startDurability = 40;
                 const int uppercaseDegradeValue = 2;
                 int expectedDurability = startDurability - (uppercaseLetters.Length * uppercaseDegradeValue);
-                var pencil = new Pencil(startDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(startDurability, _arbitraryLength);
 
-                pencil.Write(paper, uppercaseLetters);
+                pencil.Write(_arbitraryPaper, uppercaseLetters);
 
                 Assert.Equal(expectedDurability, pencil.CurrentDurability);
             }
@@ -203,10 +201,9 @@ namespace PencilDurabilityTests
             {
                 const int startDurability = 40;
                 int expectedDurability = startDurability - degradeAmount;
-                var pencil = new Pencil(startDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(startDurability, _arbitraryLength);
 
-                pencil.Write(paper, mixedCase);
+                pencil.Write(_arbitraryPaper, mixedCase);
 
                 Assert.Equal(expectedDurability, pencil.CurrentDurability);
             }
@@ -222,10 +219,9 @@ namespace PencilDurabilityTests
             {
                 const int startDurability = 40;
                 int expectedDurability = startDurability - degradeAmount;
-                var pencil = new Pencil(startDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(startDurability, _arbitraryLength);
 
-                pencil.Write(paper, mixedString);
+                pencil.Write(_arbitraryPaper, mixedString);
 
                 Assert.Equal(expectedDurability, pencil.CurrentDurability);
             }
@@ -239,38 +235,35 @@ namespace PencilDurabilityTests
             public void ShouldNeverBeNegative(string sentence, int startDurability)
             {
                 const int noDurability = 0;
-                var pencil = new Pencil(startDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(startDurability, _arbitraryLength);
 
-                pencil.Write(paper, sentence);
+                pencil.Write(_arbitraryPaper, sentence);
 
                 Assert.Equal(noDurability, pencil.CurrentDurability);
             }
         }
 
-        public class SharpeningPencil
+        public class SharpeningPencil : PencilTests
         {
             [Fact]
             public void ShouldResetDurabilityToOriginalValue()
             {
                 const int startingDurability = 100;
                 const string testSentence = "Text to waste pencil durability for testing sharpening abilities";
-                var pencil = new Pencil(startingDurability);
-                var paper = new Paper();
+                var pencil = new Pencil(startingDurability, _arbitraryLength);
 
-                pencil.Write(paper, testSentence);
+                pencil.Write(_arbitraryPaper, testSentence);
                 pencil.Sharpen();
 
                 Assert.Equal(startingDurability, pencil.CurrentDurability);
             }
 
             [Fact]
-            public void SharpeningShouldReducePencilLengthByOne()
+            public void ShouldReducePencilLengthByOne()
             {
-                const int startingDurability = 100;
                 const int startingLength = 5;
                 const int expectedLength = 4;
-                var pencil = new Pencil(startingDurability, startingLength);
+                var pencil = new Pencil(_arbitraryDurability, startingLength);
 
                 pencil.Sharpen();
 

@@ -6,21 +6,13 @@ namespace PencilDurability
 {
     public class Pencil
     {
-        private readonly bool _isDullable;
         private readonly int _originalDurability;
         private const int _LowercaseDegradeValue = 1;
         private const int _UppercaseDegradeValue = 2;
         private const string _WriteFailedCharacter = " ";
 
-
-        public Pencil()
+        public Pencil(int durability, int length)
         {
-            _isDullable = false;
-        }
-
-        public Pencil(int durability, int length = 0)
-        {
-            _isDullable = true;
             _originalDurability = durability;
             CurrentDurability = durability;
             CurrentLength = length;
@@ -40,7 +32,7 @@ namespace PencilDurability
                 bool canWrite = AdjustDurability(currentCharacter);
 
                 const string matchNonWhitespace = @"\S";
-                if (_isDullable && !canWrite && Regex.IsMatch(currentCharacter, matchNonWhitespace))
+                if (!canWrite && Regex.IsMatch(currentCharacter, matchNonWhitespace))
                 {
                     stringBuilder.Append(_WriteFailedCharacter);
                 }

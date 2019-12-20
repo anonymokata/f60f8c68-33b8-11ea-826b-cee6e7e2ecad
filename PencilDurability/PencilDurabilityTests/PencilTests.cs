@@ -206,8 +206,25 @@ namespace PencilDurabilityTests
             Assert.Equal(expectedSentence, paper.Text);
         }
 
+        [Theory]
+        [InlineData("jT", 1)]
+        [InlineData("t", 0)]
+        [InlineData("asdfgh", 3)]
+        [InlineData("asdT", 0)]
+        [InlineData("TTs dfkD SFg ewe", 10)]
+        public void DurabilityShouldNeverBeNegative(string sentence, int startDurability)
+        {
+            const int noDurability = 0;
+            var pencil = new Pencil(startDurability);
+            var paper = new Paper();
+
+            pencil.Write(paper, sentence);
+
+            Assert.Equal(noDurability, pencil.CurrentDurability);
+        }
+
         // durability should not become negative
-        //     if would be come negative, write a space.
+        //     if would become negative, write a space.
         // all characters not explicitly Uppercase or whitespace will be considered lowercase.
 
     }

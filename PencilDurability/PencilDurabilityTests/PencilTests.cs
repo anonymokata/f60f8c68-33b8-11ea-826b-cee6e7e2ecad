@@ -9,7 +9,7 @@ namespace PencilDurabilityTests
         // TODO: all characters not explicitly Uppercase or whitespace will be considered lowercase.
 
         [Fact]
-        public void PencilShouldWriteToPaper()
+        public void WritingShouldWriteToPaper()
         {
             var pencil = new Pencil();
             var paper = new Paper();
@@ -35,7 +35,7 @@ namespace PencilDurabilityTests
         }
 
         [Fact]
-        public void PencilWithoutEnoughDurabilityWritesPartOfTheSentence()
+        public void WritingShouldWritePartOfTheSentenceWithoutEnoughDurability()
         {
             const int durability = 26;
             const string testSentence = "This should not be written and This should not be written";
@@ -49,7 +49,7 @@ namespace PencilDurabilityTests
         }
 
         [Fact]
-        public void ShouldNotWriteUppercaseIfNotEnoughDurability()
+        public void WritingShouldNotWriteUppercaseIfNotEnoughDurability()
         {
             const int startDurability = 2;
             const string testString = "aTat";
@@ -65,7 +65,7 @@ namespace PencilDurabilityTests
         public class PencilWithNoDurability
         {
             [Fact]
-            public void PencilWithNoDurabilityWritesCorrectNumberOfSpaces()
+            public void ShouldWriteCorrectNumberOfSpaces()
             {
                 const int noDurability = 0;
                 var pencil = new Pencil(noDurability);
@@ -79,7 +79,7 @@ namespace PencilDurabilityTests
             }
 
             [Fact]
-            public void PencilWithNoDurabilityAppendsSpacesToText()
+            public void ShouldAppendSpacesToText()
             {
                 const int noDurability = 0;
                 var pencil = new Pencil(noDurability);
@@ -97,7 +97,7 @@ namespace PencilDurabilityTests
             }
 
             [Fact]
-            public void PencilWithNoDurabilityStillWritesWhitespaceCharacters()
+            public void ShouldWriteWhitespaceCharacters()
             {
                 const int noDurability = 0;
                 var pencil = new Pencil(noDurability);
@@ -110,7 +110,7 @@ namespace PencilDurabilityTests
             }
 
             [Fact]
-            public void PencilWithNoDurabilityKeepsWhitespaceInMiddleOfText()
+            public void ShouldKeepWhitespaceInMiddleOfText()
             {
                 const int noDurability = 0;
                 var pencil = new Pencil(noDurability);
@@ -127,7 +127,7 @@ namespace PencilDurabilityTests
         public class Durability
         {
             [Fact]
-            public void DurabilityShouldDegradeByOneWritingLowercase()
+            public void ShouldDegradeByOneWhenWritingInLowercase()
             {
                 const string lowercaseLetter = "a";
                 const int lowercaseDegradeValue = 1;
@@ -145,7 +145,7 @@ namespace PencilDurabilityTests
             [InlineData("cdefg")]
             [InlineData("hijklmn")]
             [InlineData("opqrstuvwxyz")]
-            public void DurabilityShouldDegradeCorrectlyForManyLowercase(string lowercaseLetters)
+            public void ShouldDegradeCorrectlyForManyLowercaseLetters(string lowercaseLetters)
             {
                 const int startDurability = 20;
                 int expectedDurability = startDurability - lowercaseLetters.Length;
@@ -158,7 +158,7 @@ namespace PencilDurabilityTests
             }
 
             [Fact]
-            public void DurabilityShouldDegradeByTwoWritingUppercase()
+            public void ShouldDegradeByTwoWhenWritingInUppercase()
             {
                 const string uppercaseLetter = "A";
                 const int uppercaseDegradeValue = 2;
@@ -176,7 +176,7 @@ namespace PencilDurabilityTests
             [InlineData("CDEFG")]
             [InlineData("HIJKLMN")]
             [InlineData("OPQRSTUVWXYZ")]
-            public void DurabilityShouldDegradeCorrectlyForManyUppercase(string uppercaseLetters)
+            public void ShouldDegradeCorrectlyForManyUppercaseLetters(string uppercaseLetters)
             {
                 const int startDurability = 40;
                 const int uppercaseDegradeValue = 2;
@@ -196,7 +196,7 @@ namespace PencilDurabilityTests
             [InlineData("lsieLDOIlskd", 16)]
             [InlineData("LeLoFlEo", 12)]
             [InlineData("eLfOrG", 9)]
-            public void DurabilityShouldDegradeCorrectlyForMixedCase(string mixedCase, int degradeAmount)
+            public void ShouldDegradeCorrectlyForMixedCase(string mixedCase, int degradeAmount)
             {
                 const int startDurability = 40;
                 int expectedDurability = startDurability - degradeAmount;
@@ -215,7 +215,7 @@ namespace PencilDurabilityTests
             [InlineData("\vlsi\neLD\vOIl\tskd\v", 16)]
             [InlineData("  L\teL oFlEo  ", 12)]
             [InlineData("eL   f\tOrG", 9)]
-            public void DurabilityShouldDegradeCorrectlyForMixedCaseAndWhitespace(string mixedString, int degradeAmount)
+            public void ShouldDegradeCorrectlyForMixedCaseAndWhitespace(string mixedString, int degradeAmount)
             {
                 const int startDurability = 40;
                 int expectedDurability = startDurability - degradeAmount;
@@ -233,7 +233,7 @@ namespace PencilDurabilityTests
             [InlineData("asdfgh", 3)]
             [InlineData("asdT", 0)]
             [InlineData("TTs dfkD SFg ewe", 10)]
-            public void DurabilityShouldNeverBeNegative(string sentence, int startDurability)
+            public void ShouldNeverBeNegative(string sentence, int startDurability)
             {
                 const int noDurability = 0;
                 var pencil = new Pencil(startDurability);

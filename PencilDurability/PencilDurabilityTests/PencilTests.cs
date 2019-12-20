@@ -206,15 +206,9 @@ namespace PencilDurabilityTests
             Assert.Equal(expectedSentence, paper.Text);
         }
 
-        // whitespace degrades by 0 (\t\r\n\f\v) & ' '
-        // lowercase degrade by 1
-        // capitals degrade by 2
+        // durability should not become negative
+        //     if would be come negative, write a space.
+        // all characters not explicitly Uppercase or whitespace will be considered lowercase.
 
-        // what about punctuation and numbers?
-        //  (1p?)  qwertyuiopasdfghjklzxcvbnm 1234567890  |:"<>?\;',./*_+^`~![]{}()
-        //  (2p?)  QWERTYUIOPASDFGHJKLZXCVBNM &@#$%
-
-        // what happens when you have 1 point and try to write a capital?
-        //    writes a space and doesn't degrade?
     }
 }

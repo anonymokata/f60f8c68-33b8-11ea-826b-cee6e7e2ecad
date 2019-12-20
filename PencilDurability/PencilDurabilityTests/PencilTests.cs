@@ -270,7 +270,21 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedLength, pencil.CurrentLength);
             }
 
-            // if length is 0, sharpening does not reset durability
+            [Fact]
+            public void ShouldNotResetDurabilityWhenZeroLength()
+            {
+                const int startingDurability = 100;
+                const int startingLength = 0;
+                const string testSentence = "Keep it simple";
+                const int expectedDurability = 87;
+                var pencil = new Pencil(startingDurability, startingLength);
+
+                pencil.Write(_arbitraryPaper, testSentence);
+                pencil.Sharpen();
+
+                Assert.Equal(expectedDurability, pencil.CurrentDurability);
+            }
+
             // sharpening can't sharpen into negative length
         }
     }

@@ -48,7 +48,11 @@ namespace PencilDurability
         public void Sharpen()
         {
             CurrentLength--;
-            CurrentDurability = _originalDurability;
+
+            if (CurrentLength > 0)
+            {
+                CurrentDurability = _originalDurability;
+            }
         }
 
         private bool AdjustDurability(string currentLetter)

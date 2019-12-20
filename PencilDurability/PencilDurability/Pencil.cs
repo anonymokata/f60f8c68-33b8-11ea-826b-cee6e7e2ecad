@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace PencilDurability
 {
     public class Pencil
     {
-
-        private int _durability;
         private readonly bool _isDullable;
         private const int _LowercaseDegradeValue = 1;
         private const int _UppercaseDegradeValue = 2;
+        private const string _WriteFailedCharacter = " ";
 
         public Pencil()
         {
@@ -19,43 +19,47 @@ namespace PencilDurability
         public Pencil(int durability)
         {
             _isDullable = true;
-            _durability = durability;
+            CurrentDurability = durability;
         }
 
-        public int CurrentDurability => _durability;
+        public int CurrentDurability { get; private set; }
 
         public void Write(Paper paper, string text)
         {
+            var stringBuilder = new StringBuilder();
+
             for (int i = 0; i < text.Length; i++)
             {
-                string currentLetter = text[i].ToString();
-                bool canWrite = AdjustDurability(currentLetter);
+                string currentCharacter = text[i].ToString();
+                bool canWrite = AdjustDurability(currentCharacter);
 
-                if (!_isDullable || canWrite)
+                const string matchNonWhitespace = @"\S";
+                if (_isDullable && !canWrite && Regex.IsMatch(currentCharacter, matchNonWhitespace))
                 {
-                    paper.Text += currentLetter;
+                    stringBuilder.Append(_WriteFailedCharacter);
                 }
                 else
                 {
-                    const string matchNonWhitespace = @"\S";
-                    paper.Text += Regex.Replace(currentLetter, matchNonWhitespace, replacement: " ");
+                    stringBuilder.Append(currentCharacter);
                 }
             }
+
+            paper.Text += stringBuilder.ToString();
         }
 
         private bool AdjustDurability(string currentLetter)
         {
             bool isUppercase = Regex.IsMatch(currentLetter, "[A-Z]");
-            if (isUppercase && _durability >= _UppercaseDegradeValue)
+            if (isUppercase && CurrentDurability >= _UppercaseDegradeValue)
             {
-                _durability -= _UppercaseDegradeValue;
+                CurrentDurability -= _UppercaseDegradeValue;
                 return true;
             }
 
             bool isLowercase = Regex.IsMatch(currentLetter, "[a-z]");
-            if (isLowercase && _durability >= _LowercaseDegradeValue)
+            if (isLowercase && CurrentDurability >= _LowercaseDegradeValue)
             {
-                _durability -= _LowercaseDegradeValue;
+                CurrentDurability -= _LowercaseDegradeValue;
                 return true;
             }
 

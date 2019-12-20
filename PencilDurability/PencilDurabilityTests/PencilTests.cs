@@ -8,58 +8,63 @@ namespace PencilDurabilityTests
     {
         // TODO: all characters not explicitly Uppercase or whitespace will be considered lowercase.
 
-        [Fact]
-        public void WritingShouldWriteToPaper()
+        public class Writing
         {
-            var pencil = new Pencil();
-            var paper = new Paper();
-            const string testSentence = "This is a sentence.";
 
-            pencil.Write(paper, testSentence);
+            [Fact]
+            public void WritingShouldWriteToPaper()
+            {
+                var pencil = new Pencil();
+                var paper = new Paper();
+                const string testSentence = "This is a sentence.";
 
-            Assert.Equal(testSentence, paper.Text);
-        }
+                pencil.Write(paper, testSentence);
 
-        [Fact]
-        public void WritingShouldAppendToPreExistingText()
-        {
-            var pencil = new Pencil();
-            var paper = new Paper();
-            const string testSentence1 = "This is a sentence.";
-            const string testSentence2 = " This is another sentence.";
-            paper.Text = testSentence1;
+                Assert.Equal(testSentence, paper.Text);
+            }
 
-            pencil.Write(paper, testSentence2);
+            [Fact]
+            public void WritingShouldAppendToPreExistingText()
+            {
+                var pencil = new Pencil();
+                var paper = new Paper();
+                const string testSentence1 = "This is a sentence.";
+                const string testSentence2 = " This is another sentence.";
+                paper.Text = testSentence1;
 
-            Assert.Equal(testSentence1 + testSentence2, paper.Text);
-        }
+                pencil.Write(paper, testSentence2);
 
-        [Fact]
-        public void WritingShouldWritePartOfTheSentenceWithoutEnoughDurability()
-        {
-            const int durability = 26;
-            const string testSentence = "This should not be written and This should not be written";
-            const string expectedSentence = "This should not be written and                           ";
-            var pencil = new Pencil(durability);
-            var paper = new Paper();
+                Assert.Equal(testSentence1 + testSentence2, paper.Text);
+            }
 
-            pencil.Write(paper, testSentence);
+            [Fact]
+            public void WritingShouldWritePartOfTheSentenceWithoutEnoughDurability()
+            {
+                const int durability = 26;
+                const string testSentence = "This should not be written and This should not be written";
+                const string expectedSentence = "This should not be written and                           ";
+                var pencil = new Pencil(durability);
+                var paper = new Paper();
 
-            Assert.Equal(expectedSentence, paper.Text);
-        }
+                pencil.Write(paper, testSentence);
 
-        [Fact]
-        public void WritingShouldNotWriteUppercaseIfNotEnoughDurability()
-        {
-            const int startDurability = 2;
-            const string testString = "aTat";
-            const string expectedText = "a a ";
-            var pencil = new Pencil(startDurability);
-            var paper = new Paper();
+                Assert.Equal(expectedSentence, paper.Text);
+            }
 
-            pencil.Write(paper, testString);
+            [Fact]
+            public void WritingShouldNotWriteUppercaseIfNotEnoughDurability()
+            {
+                const int startDurability = 2;
+                const string testString = "aTat";
+                const string expectedText = "a a ";
+                var pencil = new Pencil(startDurability);
+                var paper = new Paper();
 
-            Assert.Equal(expectedText, paper.Text);
+                pencil.Write(paper, testString);
+
+                Assert.Equal(expectedText, paper.Text);
+            }
+
         }
 
         public class PencilWithNoDurability
@@ -226,7 +231,7 @@ namespace PencilDurabilityTests
 
                 Assert.Equal(expectedDurability, pencil.CurrentDurability);
             }
-            
+
             [Theory]
             [InlineData("jT", 1)]
             [InlineData("t", 0)]
@@ -243,6 +248,6 @@ namespace PencilDurabilityTests
 
                 Assert.Equal(noDurability, pencil.CurrentDurability);
             }
-        }      
+        }
     }
 }

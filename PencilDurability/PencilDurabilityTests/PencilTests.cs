@@ -6,6 +6,8 @@ namespace PencilDurabilityTests
 {
     public class PencilTests
     {
+        // TODO: all characters not explicitly Uppercase or whitespace will be considered lowercase.
+
         [Fact]
         public void PencilShouldWriteToPaper()
         {
@@ -33,166 +35,6 @@ namespace PencilDurabilityTests
         }
 
         [Fact]
-        public void PencilWithNoDurabilityWritesCorrectNumberOfSpaces()
-        {
-            const int noDurability = 0;
-            var pencil = new Pencil(noDurability);
-            var paper = new Paper();
-            const string testSentence = "This should not be written.";
-            const string expectedSpaces = "                           ";
-
-            pencil.Write(paper, testSentence);
-
-            Assert.Equal(expectedSpaces, paper.Text);
-        }
-
-        [Fact]
-        public void PencilWithNoDurabilityAppendsSpacesToText()
-        {
-            const int noDurability = 0;
-            var pencil = new Pencil(noDurability);
-            var paper = new Paper();
-
-            const string preexistingText = "This already exists.";
-            const string testSentence = " This should not be written.";
-            const string expectedSpaces = "                            ";
-
-            paper.Text = preexistingText;
-
-            pencil.Write(paper, testSentence);
-
-            Assert.Equal(preexistingText + expectedSpaces, paper.Text);
-        }
-
-        [Fact]
-        public void PencilWithNoDurabilityStillWritesWhitespaceCharacters()
-        {
-            const int noDurability = 0;
-            var pencil = new Pencil(noDurability);
-            var paper = new Paper();
-            const string testWhitespace = "  \t\r\n\f\v  ";
-
-            pencil.Write(paper, testWhitespace);
-
-            Assert.Equal(testWhitespace, paper.Text);
-        }
-
-        [Fact]
-        public void PencilWithNoDurabilityKeepsWhitespaceInMiddleOfText()
-        {
-            const int noDurability = 0;
-            var pencil = new Pencil(noDurability);
-            var paper = new Paper();
-            const string testSentence = "\vT\this is a\t sentence\n with whi\r\ntespace chara\ncters.\f";
-            const string expectedText = "\v \t        \t         \n         \r\n             \n      \f";
-
-            pencil.Write(paper, testSentence);
-
-            Assert.Equal(expectedText, paper.Text);
-        }
-
-        [Fact]
-        public void DurabilityShouldDegradeByOneWritingLowercase()
-        {
-            const string lowercaseLetter = "a";
-            const int lowercaseDegradeValue = 1;
-            const int startDurability = 5;
-            var pencil = new Pencil(startDurability);
-            var paper = new Paper();
-
-            pencil.Write(paper, lowercaseLetter);
-
-            Assert.Equal(startDurability - lowercaseDegradeValue, pencil.CurrentDurability);
-        }
-
-        [Theory]
-        [InlineData("ab")]
-        [InlineData("cdefg")]
-        [InlineData("hijklmn")]
-        [InlineData("opqrstuvwxyz")]
-        public void DurabilityShouldDegradeCorrectlyForManyLowercase(string lowercaseLetters)
-        {
-            const int startDurability = 20;
-            int expectedDurability = startDurability - lowercaseLetters.Length;
-            var pencil = new Pencil(startDurability);
-            var paper = new Paper();
-
-            pencil.Write(paper, lowercaseLetters);
-
-            Assert.Equal(expectedDurability, pencil.CurrentDurability);
-        }
-
-        [Fact]
-        public void DurabilityShouldDegradeByTwoWritingUppercase()
-        {
-            const string uppercaseLetter = "A";
-            const int uppercaseDegradeValue = 2;
-            const int startDurability = 5;
-            var pencil = new Pencil(startDurability);
-            var paper = new Paper();
-
-            pencil.Write(paper, uppercaseLetter);
-
-            Assert.Equal(startDurability - uppercaseDegradeValue, pencil.CurrentDurability);
-        }
-
-        [Theory]
-        [InlineData("AB")]
-        [InlineData("CDEFG")]
-        [InlineData("HIJKLMN")]
-        [InlineData("OPQRSTUVWXYZ")]
-        public void DurabilityShouldDegradeCorrectlyForManyUppercase(string uppercaseLetters)
-        {
-            const int startDurability = 40;
-            const int uppercaseDegradeValue = 2;
-            int expectedDurability = startDurability - (uppercaseLetters.Length * uppercaseDegradeValue);
-            var pencil = new Pencil(startDurability);
-            var paper = new Paper();
-
-            pencil.Write(paper, uppercaseLetters);
-
-            Assert.Equal(expectedDurability, pencil.CurrentDurability);
-        }
-
-        [Theory]
-        [InlineData("Ah", 3)]
-        [InlineData("rD", 3)]
-        [InlineData("LEMDalsjLEKD", 20)]
-        [InlineData("lsieLDOIlskd", 16)]
-        [InlineData("LeLoFlEo", 12)]
-        [InlineData("eLfOrG", 9)]
-        public void DurabilityShouldDegradeCorrectlyForMixedCase(string mixedCase, int degradeAmount)
-        {
-            const int startDurability = 40;
-            int expectedDurability = startDurability - degradeAmount;
-            var pencil = new Pencil(startDurability);
-            var paper = new Paper();
-
-            pencil.Write(paper, mixedCase);
-
-            Assert.Equal(expectedDurability, pencil.CurrentDurability);
-        }
-
-        [Theory]
-        [InlineData("A  h", 3)]
-        [InlineData("\trD", 3)]
-        [InlineData("L\nEM\tDa\nlsjL\r\nEKD", 20)]
-        [InlineData("\vlsi\neLD\vOIl\tskd\v", 16)]
-        [InlineData("  L\teL oFlEo  ", 12)]
-        [InlineData("eL   f\tOrG", 9)]
-        public void DurabilityShouldDegradeCorrectlyForMixedCaseAndWhitespace(string mixedString, int degradeAmount)
-        {
-            const int startDurability = 40;
-            int expectedDurability = startDurability - degradeAmount;
-            var pencil = new Pencil(startDurability);
-            var paper = new Paper();
-
-            pencil.Write(paper, mixedString);
-
-            Assert.Equal(expectedDurability, pencil.CurrentDurability);
-        }
-
-        [Fact]
         public void PencilWithoutEnoughDurabilityWritesPartOfTheSentence()
         {
             const int durability = 26;
@@ -204,23 +46,6 @@ namespace PencilDurabilityTests
             pencil.Write(paper, testSentence);
 
             Assert.Equal(expectedSentence, paper.Text);
-        }
-
-        [Theory]
-        [InlineData("jT", 1)]
-        [InlineData("t", 0)]
-        [InlineData("asdfgh", 3)]
-        [InlineData("asdT", 0)]
-        [InlineData("TTs dfkD SFg ewe", 10)]
-        public void DurabilityShouldNeverBeNegative(string sentence, int startDurability)
-        {
-            const int noDurability = 0;
-            var pencil = new Pencil(startDurability);
-            var paper = new Paper();
-
-            pencil.Write(paper, sentence);
-
-            Assert.Equal(noDurability, pencil.CurrentDurability);
         }
 
         [Fact]
@@ -237,8 +62,187 @@ namespace PencilDurabilityTests
             Assert.Equal(expectedText, paper.Text);
         }
 
-        // TODO: if would become negative, write a space. (Write T but only 1 durability.)
-        // TODO: all characters not explicitly Uppercase or whitespace will be considered lowercase.
+        public class PencilWithNoDurability
+        {
+            [Fact]
+            public void PencilWithNoDurabilityWritesCorrectNumberOfSpaces()
+            {
+                const int noDurability = 0;
+                var pencil = new Pencil(noDurability);
+                var paper = new Paper();
+                const string testSentence = "This should not be written.";
+                const string expectedSpaces = "                           ";
 
+                pencil.Write(paper, testSentence);
+
+                Assert.Equal(expectedSpaces, paper.Text);
+            }
+
+            [Fact]
+            public void PencilWithNoDurabilityAppendsSpacesToText()
+            {
+                const int noDurability = 0;
+                var pencil = new Pencil(noDurability);
+                var paper = new Paper();
+
+                const string preexistingText = "This already exists.";
+                const string testSentence = " This should not be written.";
+                const string expectedSpaces = "                            ";
+
+                paper.Text = preexistingText;
+
+                pencil.Write(paper, testSentence);
+
+                Assert.Equal(preexistingText + expectedSpaces, paper.Text);
+            }
+
+            [Fact]
+            public void PencilWithNoDurabilityStillWritesWhitespaceCharacters()
+            {
+                const int noDurability = 0;
+                var pencil = new Pencil(noDurability);
+                var paper = new Paper();
+                const string testWhitespace = "  \t\r\n\f\v  ";
+
+                pencil.Write(paper, testWhitespace);
+
+                Assert.Equal(testWhitespace, paper.Text);
+            }
+
+            [Fact]
+            public void PencilWithNoDurabilityKeepsWhitespaceInMiddleOfText()
+            {
+                const int noDurability = 0;
+                var pencil = new Pencil(noDurability);
+                var paper = new Paper();
+                const string testSentence = "\vT\this is a\t sentence\n with whi\r\ntespace chara\ncters.\f";
+                const string expectedText = "\v \t        \t         \n         \r\n             \n      \f";
+
+                pencil.Write(paper, testSentence);
+
+                Assert.Equal(expectedText, paper.Text);
+            }
+        }
+
+        public class Durability
+        {
+            [Fact]
+            public void DurabilityShouldDegradeByOneWritingLowercase()
+            {
+                const string lowercaseLetter = "a";
+                const int lowercaseDegradeValue = 1;
+                const int startDurability = 5;
+                var pencil = new Pencil(startDurability);
+                var paper = new Paper();
+
+                pencil.Write(paper, lowercaseLetter);
+
+                Assert.Equal(startDurability - lowercaseDegradeValue, pencil.CurrentDurability);
+            }
+
+            [Theory]
+            [InlineData("ab")]
+            [InlineData("cdefg")]
+            [InlineData("hijklmn")]
+            [InlineData("opqrstuvwxyz")]
+            public void DurabilityShouldDegradeCorrectlyForManyLowercase(string lowercaseLetters)
+            {
+                const int startDurability = 20;
+                int expectedDurability = startDurability - lowercaseLetters.Length;
+                var pencil = new Pencil(startDurability);
+                var paper = new Paper();
+
+                pencil.Write(paper, lowercaseLetters);
+
+                Assert.Equal(expectedDurability, pencil.CurrentDurability);
+            }
+
+            [Fact]
+            public void DurabilityShouldDegradeByTwoWritingUppercase()
+            {
+                const string uppercaseLetter = "A";
+                const int uppercaseDegradeValue = 2;
+                const int startDurability = 5;
+                var pencil = new Pencil(startDurability);
+                var paper = new Paper();
+
+                pencil.Write(paper, uppercaseLetter);
+
+                Assert.Equal(startDurability - uppercaseDegradeValue, pencil.CurrentDurability);
+            }
+
+            [Theory]
+            [InlineData("AB")]
+            [InlineData("CDEFG")]
+            [InlineData("HIJKLMN")]
+            [InlineData("OPQRSTUVWXYZ")]
+            public void DurabilityShouldDegradeCorrectlyForManyUppercase(string uppercaseLetters)
+            {
+                const int startDurability = 40;
+                const int uppercaseDegradeValue = 2;
+                int expectedDurability = startDurability - (uppercaseLetters.Length * uppercaseDegradeValue);
+                var pencil = new Pencil(startDurability);
+                var paper = new Paper();
+
+                pencil.Write(paper, uppercaseLetters);
+
+                Assert.Equal(expectedDurability, pencil.CurrentDurability);
+            }
+
+            [Theory]
+            [InlineData("Ah", 3)]
+            [InlineData("rD", 3)]
+            [InlineData("LEMDalsjLEKD", 20)]
+            [InlineData("lsieLDOIlskd", 16)]
+            [InlineData("LeLoFlEo", 12)]
+            [InlineData("eLfOrG", 9)]
+            public void DurabilityShouldDegradeCorrectlyForMixedCase(string mixedCase, int degradeAmount)
+            {
+                const int startDurability = 40;
+                int expectedDurability = startDurability - degradeAmount;
+                var pencil = new Pencil(startDurability);
+                var paper = new Paper();
+
+                pencil.Write(paper, mixedCase);
+
+                Assert.Equal(expectedDurability, pencil.CurrentDurability);
+            }
+
+            [Theory]
+            [InlineData("A  h", 3)]
+            [InlineData("\trD", 3)]
+            [InlineData("L\nEM\tDa\nlsjL\r\nEKD", 20)]
+            [InlineData("\vlsi\neLD\vOIl\tskd\v", 16)]
+            [InlineData("  L\teL oFlEo  ", 12)]
+            [InlineData("eL   f\tOrG", 9)]
+            public void DurabilityShouldDegradeCorrectlyForMixedCaseAndWhitespace(string mixedString, int degradeAmount)
+            {
+                const int startDurability = 40;
+                int expectedDurability = startDurability - degradeAmount;
+                var pencil = new Pencil(startDurability);
+                var paper = new Paper();
+
+                pencil.Write(paper, mixedString);
+
+                Assert.Equal(expectedDurability, pencil.CurrentDurability);
+            }
+            
+            [Theory]
+            [InlineData("jT", 1)]
+            [InlineData("t", 0)]
+            [InlineData("asdfgh", 3)]
+            [InlineData("asdT", 0)]
+            [InlineData("TTs dfkD SFg ewe", 10)]
+            public void DurabilityShouldNeverBeNegative(string sentence, int startDurability)
+            {
+                const int noDurability = 0;
+                var pencil = new Pencil(startDurability);
+                var paper = new Paper();
+
+                pencil.Write(paper, sentence);
+
+                Assert.Equal(noDurability, pencil.CurrentDurability);
+            }
+        }      
     }
 }

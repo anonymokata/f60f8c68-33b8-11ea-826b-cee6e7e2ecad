@@ -285,7 +285,17 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedDurability, pencil.CurrentDurability);
             }
 
-            // sharpening can't sharpen into negative length
+            [Fact]
+            public void ShouldNotAllowLengthToBecomeNegative()
+            {
+                const int startingLength = 0;
+                const int expectedLength = 0;
+                var pencil = new Pencil(_arbitraryDurability, startingLength);
+
+                pencil.Sharpen();
+
+                Assert.Equal(expectedLength, pencil.CurrentLength);
+            }
         }
     }
 }

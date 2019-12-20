@@ -35,34 +35,6 @@ namespace PencilDurabilityTests
 
                 Assert.Equal(testSentence1 + testSentence2, paper.Text);
             }
-
-            [Fact]
-            public void ShouldWritePartOfTheSentenceWithoutEnoughDurability()
-            {
-                const int durability = 26;
-                const string testSentence = "This should not be written and This should not be written";
-                const string expectedSentence = "This should not be written and                           ";
-                var pencil = new Pencil(durability);
-                var paper = new Paper();
-
-                pencil.Write(paper, testSentence);
-
-                Assert.Equal(expectedSentence, paper.Text);
-            }
-
-            [Fact]
-            public void ShouldNotWriteUppercaseIfNotEnoughDurability()
-            {
-                const int startDurability = 2;
-                const string testString = "aTat";
-                const string expectedText = "a a ";
-                var pencil = new Pencil(startDurability);
-                var paper = new Paper();
-
-                pencil.Write(paper, testString);
-
-                Assert.Equal(expectedText, paper.Text);
-            }
         }
 
         public class PencilWithNoDurability
@@ -127,8 +99,36 @@ namespace PencilDurabilityTests
             }
         }
 
-        public class Durability
+        public class PencilWithDurability
         {
+            [Fact]
+            public void ShouldWritePartOfTheSentenceWithoutEnoughDurability()
+            {
+                const int durability = 26;
+                const string testSentence = "This should not be written and This should not be written";
+                const string expectedSentence = "This should not be written and                           ";
+                var pencil = new Pencil(durability);
+                var paper = new Paper();
+
+                pencil.Write(paper, testSentence);
+
+                Assert.Equal(expectedSentence, paper.Text);
+            }
+
+            [Fact]
+            public void ShouldNotWriteUppercaseIfNotEnoughDurability()
+            {
+                const int startDurability = 2;
+                const string testString = "aTat";
+                const string expectedText = "a a ";
+                var pencil = new Pencil(startDurability);
+                var paper = new Paper();
+
+                pencil.Write(paper, testString);
+
+                Assert.Equal(expectedText, paper.Text);
+            }
+
             [Fact]
             public void ShouldDegradeByOneWhenWritingInLowercase()
             {

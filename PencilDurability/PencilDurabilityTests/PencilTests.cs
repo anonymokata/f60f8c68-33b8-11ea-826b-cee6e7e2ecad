@@ -10,9 +10,8 @@ namespace PencilDurabilityTests
 
         public class Writing
         {
-
             [Fact]
-            public void WritingShouldWriteToPaper()
+            public void ShouldWriteToPaper()
             {
                 var pencil = new Pencil();
                 var paper = new Paper();
@@ -24,7 +23,7 @@ namespace PencilDurabilityTests
             }
 
             [Fact]
-            public void WritingShouldAppendToPreExistingText()
+            public void ShouldAppendToPreExistingText()
             {
                 var pencil = new Pencil();
                 var paper = new Paper();
@@ -38,7 +37,7 @@ namespace PencilDurabilityTests
             }
 
             [Fact]
-            public void WritingShouldWritePartOfTheSentenceWithoutEnoughDurability()
+            public void ShouldWritePartOfTheSentenceWithoutEnoughDurability()
             {
                 const int durability = 26;
                 const string testSentence = "This should not be written and This should not be written";
@@ -52,7 +51,7 @@ namespace PencilDurabilityTests
             }
 
             [Fact]
-            public void WritingShouldNotWriteUppercaseIfNotEnoughDurability()
+            public void ShouldNotWriteUppercaseIfNotEnoughDurability()
             {
                 const int startDurability = 2;
                 const string testString = "aTat";
@@ -64,7 +63,6 @@ namespace PencilDurabilityTests
 
                 Assert.Equal(expectedText, paper.Text);
             }
-
         }
 
         public class PencilWithNoDurability

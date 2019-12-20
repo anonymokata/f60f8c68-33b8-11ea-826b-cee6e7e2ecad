@@ -172,7 +172,7 @@ namespace PencilDurabilityTests
 
             Assert.Equal(expectedDurability, pencil.CurrentDurability);
         }
-        
+
         [Theory]
         [InlineData("A  h", 3)]
         [InlineData("\trD", 3)]
@@ -190,6 +190,20 @@ namespace PencilDurabilityTests
             pencil.Write(paper, mixedString);
 
             Assert.Equal(expectedDurability, pencil.CurrentDurability);
+        }
+
+        [Fact]
+        public void PencilWithoutEnoughDurabilityWritesPartOfTheSentence()
+        {
+            const int durability = 26;
+            const string testSentence = "This should not be written and This should not be written";
+            const string expectedSentence = "This should not be written and                           ";
+            var pencil = new Pencil(durability);
+            var paper = new Paper();
+
+            pencil.Write(paper, testSentence);
+
+            Assert.Equal(expectedSentence, paper.Text);
         }
 
         // whitespace degrades by 0 (\t\r\n\f\v) & ' '

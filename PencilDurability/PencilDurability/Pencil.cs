@@ -37,16 +37,16 @@ namespace PencilDurability
                 {
                     _durability -= _LowercaseDegradeValue;
                 }
-            }
 
-            if (!_isDullable || _durability > 0)
-            {
-                paper.Text += text;
-            }
-            else
-            {
-                const string matchNonWhitespace = @"\S";
-                paper.Text += Regex.Replace(text, matchNonWhitespace, replacement: " ");
+                if (!_isDullable || _durability >= 0)
+                {
+                    paper.Text += currentLetter;
+                }
+                else
+                {
+                    const string matchNonWhitespace = @"\S";
+                    paper.Text += Regex.Replace(currentLetter, matchNonWhitespace, replacement: " ");
+                }
             }
         }
     }

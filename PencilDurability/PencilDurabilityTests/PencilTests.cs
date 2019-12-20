@@ -248,34 +248,37 @@ namespace PencilDurabilityTests
             }
         }
 
-        [Fact]
-        public void SharpeningPencilShouldResetDurabilityToOriginalValue()
+        public class SharpeningPencil
         {
-            const int startingDurability = 100;
-            const string testSentence = "Text to waste pencil durability for testing sharpening abilities";
-            var pencil = new Pencil(startingDurability);
-            var paper = new Paper();
+            [Fact]
+            public void ShouldResetDurabilityToOriginalValue()
+            {
+                const int startingDurability = 100;
+                const string testSentence = "Text to waste pencil durability for testing sharpening abilities";
+                var pencil = new Pencil(startingDurability);
+                var paper = new Paper();
 
-            pencil.Write(paper, testSentence);
-            pencil.Sharpen();
+                pencil.Write(paper, testSentence);
+                pencil.Sharpen();
 
-            Assert.Equal(startingDurability, pencil.CurrentDurability);
+                Assert.Equal(startingDurability, pencil.CurrentDurability);
+            }
+
+            [Fact]
+            public void SharpeningShouldReducePencilLengthByOne()
+            {
+                const int startingDurability = 100;
+                const int startingLength = 5;
+                const int expectedLength = 4;
+                var pencil = new Pencil(startingDurability, startingLength);
+
+                pencil.Sharpen();
+
+                Assert.Equal(expectedLength, pencil.CurrentLength);
+            }
+
+            // if length is 0, sharpening does not reset durability
+            // sharpening can't sharpen into negative length
         }
-
-        [Fact]
-        public void SharpeningShouldReducePencilLengthByOne()
-        {
-            const int startingDurability = 100;
-            const int startingLength = 5;
-            const int expectedLength = 4;
-            var pencil = new Pencil(startingDurability, startingLength);
-
-            pencil.Sharpen();
-
-            Assert.Equal(expectedLength, pencil.CurrentLength);
-        }
-
-        // if length is 0, sharpening does not reset durability
-        // sharpening can't sharpen into negative length
     }
 }

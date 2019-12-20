@@ -7,9 +7,11 @@ namespace PencilDurability
     public class Pencil
     {
         private readonly bool _isDullable;
+        private readonly int _originalDurability;
         private const int _LowercaseDegradeValue = 1;
         private const int _UppercaseDegradeValue = 2;
         private const string _WriteFailedCharacter = " ";
+        
 
         public Pencil()
         {
@@ -19,6 +21,7 @@ namespace PencilDurability
         public Pencil(int durability)
         {
             _isDullable = true;
+            _originalDurability = durability;
             CurrentDurability = durability;
         }
 
@@ -45,6 +48,11 @@ namespace PencilDurability
             }
 
             paper.Text += stringBuilder.ToString();
+        }
+
+        public void Sharpen()
+        {
+            CurrentDurability = _originalDurability;
         }
 
         private bool AdjustDurability(string currentLetter)

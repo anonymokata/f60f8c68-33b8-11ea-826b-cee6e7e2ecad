@@ -247,5 +247,24 @@ namespace PencilDurabilityTests
                 Assert.Equal(noDurability, pencil.CurrentDurability);
             }
         }
+
+        [Fact]
+        public void SharpeningPencilShouldResetDurabilityToOriginalValue()
+        {
+            const int startingDurability = 100;
+            const string testSentence = "Text to waste pencil durability for testing sharpening abilities";
+            var pencil = new Pencil(startingDurability);
+            var paper = new Paper();
+
+            pencil.Write(paper, testSentence);
+            pencil.Sharpen();
+
+            Assert.Equal(startingDurability, pencil.CurrentDurability);
+        }
+
+        // Sharpening pencil resets its durability to its original value
+        // Pencil gets initialized with a length value. 
+        //           one sharpen costs one length
+
     }
 }

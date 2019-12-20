@@ -11,21 +11,24 @@ namespace PencilDurability
         private const int _LowercaseDegradeValue = 1;
         private const int _UppercaseDegradeValue = 2;
         private const string _WriteFailedCharacter = " ";
-        
+
 
         public Pencil()
         {
             _isDullable = false;
         }
 
-        public Pencil(int durability)
+        public Pencil(int durability, int length = 0)
         {
             _isDullable = true;
             _originalDurability = durability;
             CurrentDurability = durability;
+            CurrentLength = length;
         }
 
         public int CurrentDurability { get; private set; }
+
+        public int CurrentLength { get; private set; }
 
         public void Write(Paper paper, string text)
         {
@@ -52,6 +55,7 @@ namespace PencilDurability
 
         public void Sharpen()
         {
+            CurrentLength--;
             CurrentDurability = _originalDurability;
         }
 

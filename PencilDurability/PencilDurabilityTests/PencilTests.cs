@@ -262,9 +262,20 @@ namespace PencilDurabilityTests
             Assert.Equal(startingDurability, pencil.CurrentDurability);
         }
 
-        // Sharpening pencil resets its durability to its original value
-        // Pencil gets initialized with a length value. 
-        //           one sharpen costs one length
+        [Fact]
+        public void SharpeningShouldReducePencilLengthByOne()
+        {
+            const int startingDurability = 100;
+            const int startingLength = 5;
+            const int expectedLength = 4;
+            var pencil = new Pencil(startingDurability, startingLength);
 
+            pencil.Sharpen();
+
+            Assert.Equal(expectedLength, pencil.CurrentLength);
+        }
+
+        // if length is 0, sharpening does not reset durability
+        // sharpening can't sharpen into negative length
     }
 }

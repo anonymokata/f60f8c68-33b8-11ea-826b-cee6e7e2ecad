@@ -24,7 +24,7 @@ namespace PencilDurabilityTests
             public void ShouldWriteToPaper()
             {
                 var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
-                const string testSentence = "This is a sentence.";
+                const string testSentence = "This is a sentence";
 
                 pencil.Write(_arbitraryPaper, testSentence);
 
@@ -35,8 +35,8 @@ namespace PencilDurabilityTests
             public void ShouldAppendToPreExistingText()
             {
                 var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
-                const string testSentence1 = "This is a sentence.";
-                const string testSentence2 = " This is another sentence.";
+                const string testSentence1 = "This is a sentence";
+                const string testSentence2 = " This is another sentence";
                 _arbitraryPaper.Text = testSentence1;
 
                 pencil.Write(_arbitraryPaper, testSentence2);

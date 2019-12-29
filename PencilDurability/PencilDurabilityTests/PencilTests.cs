@@ -297,5 +297,31 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedLength, pencil.CurrentLength);
             }
         }
+
+        public class Erasing : PencilTests
+        {
+            // should remove matching text
+            // should replace matched text with spaces
+            // should replace matching text in middle of sentence
+            // should replace matching text scanning from the end
+
+            // what about whitespace characters? (tabs and such) 
+            // Should case be matched exactly? (seems assumed yes)
+
+            [Fact]
+            public void ShouldRemoveMatchingText()
+            {
+                string testWord = "word";
+                
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
+                var paper = new Paper();
+
+                paper.Text = testWord;
+
+                pencil.Erase(paper, testWord);
+
+                Assert.DoesNotContain(testWord, paper.Text);
+            }
+        }
     }
 }

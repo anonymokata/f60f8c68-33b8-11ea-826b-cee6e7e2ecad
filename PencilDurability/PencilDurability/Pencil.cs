@@ -56,6 +56,11 @@ namespace PencilDurability
             CurrentDurability = _originalDurability;
         }
 
+        public void Erase(Paper paper, string text)
+        {
+            paper.Text = "";
+        }
+
         private bool AdjustDurability(string currentLetter)
         {
             bool isUppercase = Regex.IsMatch(currentLetter, "[A-Z]");

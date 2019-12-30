@@ -300,7 +300,7 @@ namespace PencilDurabilityTests
 
         public class Erasing : PencilTests
         {
-            // replace any character matched with spaces
+            // replace whitespace matched with spaces
             // Case is matched exactly
 
             [Fact]
@@ -386,6 +386,23 @@ namespace PencilDurabilityTests
                 pencil.Erase(paper, eraseWord);
 
                 Assert.Equal(testSentence, paper.Text);
+            }
+
+            [Fact]
+            public void ShouldReplaceWhitespaceWithSpaces()
+            {
+                const string testWhitespace = "  \t\r\n\f\v  ";
+                const string expected = "         ";
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
+                var paper = new Paper
+                {
+                    Text = testWhitespace
+                };
+
+                pencil.Erase(paper, testWhitespace);
+
+                Assert.Equal(expected, paper.Text);
             }
         }
     }

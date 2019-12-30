@@ -300,9 +300,6 @@ namespace PencilDurabilityTests
 
         public class Erasing : PencilTests
         {
-            // replace whitespace matched with spaces
-            // Case is matched exactly
-
             [Fact]
             public void ShouldRemoveMatchingText()
             {
@@ -403,6 +400,24 @@ namespace PencilDurabilityTests
                 pencil.Erase(paper, testWhitespace);
 
                 Assert.Equal(expected, paper.Text);
+            }
+
+            [Fact]
+            public void ShouldNotIgnoreCaseWhenMatching()
+            {
+                const string testSentence = "This but not this";
+                const string eraseWord = "This";
+                const string expectedSentence = "     but not this";
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
+                var paper = new Paper
+                {
+                    Text = testSentence
+                };
+
+                pencil.Erase(paper, eraseWord);
+
+                Assert.Equal(expectedSentence, paper.Text);
             }
         }
     }

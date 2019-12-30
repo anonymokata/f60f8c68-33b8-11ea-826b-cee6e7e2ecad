@@ -66,11 +66,12 @@ namespace PencilDurability
                 return;
             }
 
+            var paperText = new StringBuilder(paper.Text);
             var replacementString = new string(_EraseReplacementCharacter, text.Length);
-            string matchRemoved = paper.Text.Remove(lastMatchIndex, text.Length);
-            string newText = matchRemoved.Insert(lastMatchIndex, replacementString);
 
-            paper.Text = newText;
+            paperText.Replace(text, replacementString, lastMatchIndex, text.Length);
+
+            paper.Text = paperText.ToString();
         }
 
         private bool AdjustDurability(string currentLetter)

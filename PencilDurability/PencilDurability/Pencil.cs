@@ -59,8 +59,11 @@ namespace PencilDurability
 
         public void Erase(Paper paper, string text)
         {
+            int lastMatchIndex = paper.Text.LastIndexOf(text);
+
             var replacementString = new string(_EraseReplacementCharacter, text.Length);
-            string newText = paper.Text.Replace(text, replacementString);
+            string matchRemoved = paper.Text.Remove(lastMatchIndex, text.Length);
+            string newText = matchRemoved.Insert(lastMatchIndex, replacementString);
 
             paper.Text = newText;
         }

@@ -300,7 +300,6 @@ namespace PencilDurabilityTests
 
         public class Erasing : PencilTests
         {
-            // should replace matching text in middle of sentence
             // should replace matching text scanning from the end
             // does nothing if text not found
 
@@ -343,6 +342,23 @@ namespace PencilDurabilityTests
                 string testSentence = "this is a test sentence";
                 string eraseWord = "test";
                 string expectedSentence = "this is a      sentence";
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
+                var paper = new Paper();
+
+                paper.Text = testSentence;
+
+                pencil.Erase(paper, eraseWord);
+
+                Assert.Equal(expectedSentence, paper.Text);
+            }
+
+            [Fact]
+            public void ShouldOnlyReplaceTheLastMatch()
+            {
+                string testSentence = "Not this but this";
+                string eraseWord = "this";
+                string expectedSentence = "Not this but     ";
 
                 var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
                 var paper = new Paper();

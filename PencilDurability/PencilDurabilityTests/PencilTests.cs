@@ -300,8 +300,6 @@ namespace PencilDurabilityTests
 
         public class Erasing : PencilTests
         {
-            // should remove matching text
-            // should replace matched text with spaces
             // should replace matching text in middle of sentence
             // should replace matching text scanning from the end
             // does nothing if text not found
@@ -337,6 +335,23 @@ namespace PencilDurabilityTests
                 pencil.Erase(paper, testWord);
 
                 Assert.Equal(expected, paper.Text);
+            }
+
+            [Fact]
+            public void ShouldReplaceOnlyMatchingText()
+            {
+                string testSentence = "this is a test sentence";
+                string eraseWord = "test";
+                string expectedSentence = "this is a      sentence";
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
+                var paper = new Paper();
+
+                paper.Text = testSentence;
+
+                pencil.Erase(paper, eraseWord);
+
+                Assert.Equal(expectedSentence, paper.Text);
             }
         }
     }

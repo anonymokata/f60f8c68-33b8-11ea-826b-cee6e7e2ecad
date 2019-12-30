@@ -59,7 +59,10 @@ namespace PencilDurability
 
         public void Erase(Paper paper, string text)
         {
-            paper.Text = new string(_EraseReplacementCharacter, text.Length);
+            var replacementString = new string(_EraseReplacementCharacter, text.Length);
+            string newText = paper.Text.Replace(text, replacementString);
+
+            paper.Text = newText;
         }
 
         private bool AdjustDurability(string currentLetter)

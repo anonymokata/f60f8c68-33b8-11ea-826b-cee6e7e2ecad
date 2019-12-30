@@ -304,6 +304,7 @@ namespace PencilDurabilityTests
             // should replace matched text with spaces
             // should replace matching text in middle of sentence
             // should replace matching text scanning from the end
+            // does nothing if text not found
 
             // what about whitespace characters? (tabs and such) 
             // Should case be matched exactly? (seems assumed yes)
@@ -321,6 +322,21 @@ namespace PencilDurabilityTests
                 pencil.Erase(paper, testWord);
 
                 Assert.DoesNotContain(testWord, paper.Text);
+            }
+
+            [Theory]
+            [InlineData("sometext", "        ")]
+            [InlineData("sometextvaryinglength", "                     ")]
+            public void ShouldReplaceMatchingTextWithSpaces(string testWord, string expected)
+            {
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
+                var paper = new Paper();
+
+                paper.Text = testWord;
+
+                pencil.Erase(paper, testWord);
+
+                Assert.Equal(expected, paper.Text);
             }
         }
     }

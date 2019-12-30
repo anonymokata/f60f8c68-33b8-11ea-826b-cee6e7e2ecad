@@ -10,6 +10,7 @@ namespace PencilDurability
         private const int _LowercaseDegradeValue = 1;
         private const int _UppercaseDegradeValue = 2;
         private const string _WriteFailedCharacter = " ";
+        private const char _EraseReplacementCharacter = ' ';
 
         public Pencil(int durability, int length)
         {
@@ -58,7 +59,7 @@ namespace PencilDurability
 
         public void Erase(Paper paper, string text)
         {
-            paper.Text = "";
+            paper.Text = new string(_EraseReplacementCharacter, text.Length);
         }
 
         private bool AdjustDurability(string currentLetter)

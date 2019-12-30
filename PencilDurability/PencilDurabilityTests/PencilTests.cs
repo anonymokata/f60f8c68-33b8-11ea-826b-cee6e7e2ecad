@@ -300,19 +300,19 @@ namespace PencilDurabilityTests
 
         public class Erasing : PencilTests
         {
-            // does nothing if text not found
             // replace any character matched with spaces
             // Case is matched exactly
 
             [Fact]
             public void ShouldRemoveMatchingText()
             {
-                string testWord = "word";
-                
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
-                var paper = new Paper();
+                const string testWord = "word";
 
-                paper.Text = testWord;
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
+                var paper = new Paper
+                {
+                    Text = testWord
+                };
 
                 pencil.Erase(paper, testWord);
 
@@ -325,9 +325,10 @@ namespace PencilDurabilityTests
             public void ShouldReplaceMatchingTextWithSpaces(string testWord, string expected)
             {
                 var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
-                var paper = new Paper();
-
-                paper.Text = testWord;
+                var paper = new Paper
+                {
+                    Text = testWord
+                };
 
                 pencil.Erase(paper, testWord);
 
@@ -337,14 +338,15 @@ namespace PencilDurabilityTests
             [Fact]
             public void ShouldReplaceOnlyMatchingText()
             {
-                string testSentence = "this is a test sentence";
-                string eraseWord = "test";
-                string expectedSentence = "this is a      sentence";
+                const string testSentence = "this is a test sentence";
+                const string eraseWord = "test";
+                const string expectedSentence = "this is a      sentence";
 
                 var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
-                var paper = new Paper();
-
-                paper.Text = testSentence;
+                var paper = new Paper
+                {
+                    Text = testSentence
+                };
 
                 pencil.Erase(paper, eraseWord);
 
@@ -354,14 +356,15 @@ namespace PencilDurabilityTests
             [Fact]
             public void ShouldOnlyReplaceTheLastMatch()
             {
-                string testSentence = "Not this but this";
-                string eraseWord = "this";
-                string expectedSentence = "Not this but     ";
+                const string testSentence = "Not this but this";
+                const string eraseWord = "this";
+                const string expectedSentence = "Not this but     ";
 
                 var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
-                var paper = new Paper();
-
-                paper.Text = testSentence;
+                var paper = new Paper
+                {
+                    Text = testSentence
+                };
 
                 pencil.Erase(paper, eraseWord);
 
@@ -371,13 +374,14 @@ namespace PencilDurabilityTests
             [Fact]
             public void ShouldDoNothingIfNoMatchIsFound()
             {
-                string testSentence = "Not this or this";
-                string eraseWord = "test";
+                const string testSentence = "Not this or this";
+                const string eraseWord = "test";
 
                 var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
-                var paper = new Paper();
-
-                paper.Text = testSentence;
+                var paper = new Paper
+                {
+                    Text = testSentence
+                };
 
                 pencil.Erase(paper, eraseWord);
 

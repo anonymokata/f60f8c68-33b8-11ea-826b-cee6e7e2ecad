@@ -61,6 +61,11 @@ namespace PencilDurability
         {
             int lastMatchIndex = paper.Text.LastIndexOf(text);
 
+            if (lastMatchIndex < 0)
+            {
+                return;
+            }
+
             var replacementString = new string(_EraseReplacementCharacter, text.Length);
             string matchRemoved = paper.Text.Remove(lastMatchIndex, text.Length);
             string newText = matchRemoved.Insert(lastMatchIndex, replacementString);

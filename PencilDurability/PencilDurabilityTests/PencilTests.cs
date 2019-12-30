@@ -300,11 +300,9 @@ namespace PencilDurabilityTests
 
         public class Erasing : PencilTests
         {
-            // should replace matching text scanning from the end
             // does nothing if text not found
-
-            // what about whitespace characters? (tabs and such) 
-            // Should case be matched exactly? (seems assumed yes)
+            // replace any character matched with spaces
+            // Case is matched exactly
 
             [Fact]
             public void ShouldRemoveMatchingText()
@@ -368,6 +366,22 @@ namespace PencilDurabilityTests
                 pencil.Erase(paper, eraseWord);
 
                 Assert.Equal(expectedSentence, paper.Text);
+            }
+
+            [Fact]
+            public void ShouldDoNothingIfNoMatchIsFound()
+            {
+                string testSentence = "Not this or this";
+                string eraseWord = "test";
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength);
+                var paper = new Paper();
+
+                paper.Text = testSentence;
+
+                pencil.Erase(paper, eraseWord);
+
+                Assert.Equal(testSentence, paper.Text);
             }
         }
     }

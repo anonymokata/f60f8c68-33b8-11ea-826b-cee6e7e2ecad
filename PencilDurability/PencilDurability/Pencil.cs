@@ -12,16 +12,19 @@ namespace PencilDurability
         private const string _WriteFailedCharacter = " ";
         private const char _EraseReplacementCharacter = ' ';
 
-        public Pencil(int durability, int length)
+        public Pencil(int durability, int length, int eraserDurability)
         {
             _originalDurability = durability;
             CurrentDurability = durability;
             CurrentLength = length;
+            CurrentEraserDurability = eraserDurability;
         }
 
         public int CurrentDurability { get; private set; }
 
         public int CurrentLength { get; private set; }
+
+        public int CurrentEraserDurability { get; private set; }
 
         public void Write(Paper paper, string text)
         {
@@ -65,6 +68,8 @@ namespace PencilDurability
             {
                 return;
             }
+
+            CurrentEraserDurability--;
 
             var paperText = new StringBuilder(paper.Text);
             var replacementString = new string(_EraseReplacementCharacter, text.Length);

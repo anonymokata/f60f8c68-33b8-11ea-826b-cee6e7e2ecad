@@ -417,6 +417,22 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedDurability, pencil.CurrentEraserDurability);
             }
 
+            [Theory]
+            [InlineData("Ah")]
+            [InlineData("lsieLDOkd")]
+            [InlineData("0?>9<8:6(*4&^2#1$%")]
+            public void ShouldDegradeCorrectlyForManyCharacters(string eraseMatch)
+            {
+                const int startEraserDurability = 50;
+                int expectedEraserDurability = startEraserDurability - eraseMatch.Length;
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, startEraserDurability);
+
+                _paper.Text = eraseMatch;
+                pencil.Erase(_paper, eraseMatch);
+
+                Assert.Equal(expectedEraserDurability, pencil.CurrentEraserDurability);
+            }
+
             // all characters degrade by 1 point
             //       Whitespace doesn't degrade eraser
             // should degrade correctly for mixed character and whitespace

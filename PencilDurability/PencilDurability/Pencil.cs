@@ -69,7 +69,7 @@ namespace PencilDurability
                 return;
             }
 
-            CurrentEraserDurability--;
+            CurrentEraserDurability -= text.Length;
 
             var paperText = new StringBuilder(paper.Text);
             var replacementString = new string(_EraseReplacementCharacter, text.Length);

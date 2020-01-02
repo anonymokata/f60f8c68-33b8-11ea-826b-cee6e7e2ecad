@@ -64,7 +64,7 @@ namespace PencilDurability
         {
             int lastMatchIndex = paper.Text.LastIndexOf(text);
 
-            if (lastMatchIndex < 0)
+            if (lastMatchIndex < 0 || CurrentEraserDurability < 1)
             {
                 return;
             }

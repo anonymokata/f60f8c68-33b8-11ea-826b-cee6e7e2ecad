@@ -449,13 +449,23 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedEraserDurability, pencil.CurrentEraserDurability);
             }
 
-            // all characters degrade by 1 point
-            //       Whitespace doesn't degrade eraser
-            // should degrade correctly for mixed character and whitespace
+            [Fact]
+            public void ShouldDoNothingWithNoDurability()
+            {
+                const string testSentence = "  \v0?>9\n<8:6 (*4&\t^2# 1$%  ";
+                const int eraserDurability = 0;
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
+                _paper.Text = testSentence;
+
+                pencil.Erase(_paper, testSentence);
+
+                Assert.Equal(testSentence, _paper.Text);
+            }
+
             // Should erase part of match if not enough durability
             //      erase characters right to left
 
-            // Can't erase with no durability
             // Eraser durability can't become negative
         }
     }

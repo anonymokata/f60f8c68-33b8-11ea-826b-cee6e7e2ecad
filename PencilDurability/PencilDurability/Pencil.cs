@@ -11,6 +11,7 @@ namespace PencilDurability
         private const int _UppercaseDegradeValue = 2;
         private const string _WriteFailedCharacter = " ";
         private const char _EraseReplacementCharacter = ' ';
+        private const string _matchNonWhitespace = @"\S";
 
         public Pencil(int durability, int length, int eraserDurability)
         {
@@ -35,8 +36,7 @@ namespace PencilDurability
                 string currentCharacter = text[i].ToString();
                 bool canWrite = AdjustDurability(currentCharacter);
 
-                const string matchNonWhitespace = @"\S";
-                if (!canWrite && Regex.IsMatch(currentCharacter, matchNonWhitespace))
+                if (!canWrite && Regex.IsMatch(currentCharacter, _matchNonWhitespace))
                 {
                     stringBuilder.Append(_WriteFailedCharacter);
                 }
@@ -69,7 +69,7 @@ namespace PencilDurability
                 return;
             }
 
-            CurrentEraserDurability -= text.Length;
+            CurrentEraserDurability -= Regex.Matches(text, _matchNonWhitespace).Count;
 
             var paperText = new StringBuilder(paper.Text);
             var replacementString = new string(_EraseReplacementCharacter, text.Length);

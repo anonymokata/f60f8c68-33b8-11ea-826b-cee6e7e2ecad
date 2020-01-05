@@ -302,196 +302,202 @@ namespace PencilDurabilityTests
 
         public class Erasing : PencilTests
         {
-            [Fact]
-            public void ShouldRemoveMatchingText()
+            public class WithEnoughDurability : PencilTests
             {
-                const string testWord = "word";
+                [Fact]
+                public void ShouldRemoveMatchingText()
+                {
+                    const string testWord = "word";
 
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
-                _paper.Text = testWord;
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                    _paper.Text = testWord;
 
-                pencil.Erase(_paper, testWord);
+                    pencil.Erase(_paper, testWord);
 
-                Assert.DoesNotContain(testWord, _paper.Text);
+                    Assert.DoesNotContain(testWord, _paper.Text);
+                }
+
+                [Theory]
+                [InlineData("sometext", "        ")]
+                [InlineData("sometextvaryinglength", "                     ")]
+                public void ShouldReplaceMatchingTextWithSpaces(string testWord, string expected)
+                {
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                    _paper.Text = testWord;
+
+                    pencil.Erase(_paper, testWord);
+
+                    Assert.Equal(expected, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldReplaceOnlyMatchingText()
+                {
+                    const string testSentence = "this is a test sentence";
+                    const string eraseWord = "test";
+                    const string expectedSentence = "this is a      sentence";
+
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                    _paper.Text = testSentence;
+
+                    pencil.Erase(_paper, eraseWord);
+
+                    Assert.Equal(expectedSentence, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldOnlyReplaceTheLastMatch()
+                {
+                    const string testSentence = "Not this but this";
+                    const string eraseWord = "this";
+                    const string expectedSentence = "Not this but     ";
+
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                    _paper.Text = testSentence;
+
+                    pencil.Erase(_paper, eraseWord);
+
+                    Assert.Equal(expectedSentence, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldDoNothingIfNoMatchIsFound()
+                {
+                    const string testSentence = "Not this or this";
+                    const string eraseWord = "test";
+
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                    _paper.Text = testSentence;
+
+                    pencil.Erase(_paper, eraseWord);
+
+                    Assert.Equal(testSentence, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldReplaceWhitespaceWithSpaces()
+                {
+                    const string testWhitespace = "  \t\r\n\f\v  ";
+                    const string expected = "         ";
+
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                    _paper.Text = testWhitespace;
+
+                    pencil.Erase(_paper, testWhitespace);
+
+                    Assert.Equal(expected, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldNotIgnoreCaseWhenMatching()
+                {
+                    const string testSentence = "This but not this";
+                    const string eraseWord = "This";
+                    const string expectedSentence = "     but not this";
+
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                    _paper.Text = testSentence;
+
+                    pencil.Erase(_paper, eraseWord);
+
+                    Assert.Equal(expectedSentence, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldDegradeByOneWhenErasingOneCharacter()
+                {
+                    const string testSentence = "This is a sentence";
+                    const string eraseLetter = "a";
+                    const int eraserDurability = 5;
+                    const int expectedDurability = 4;
+
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
+                    _paper.Text = testSentence;
+
+                    pencil.Erase(_paper, eraseLetter);
+
+                    Assert.Equal(expectedDurability, pencil.CurrentEraserDurability);
+                }
+
+                [Theory]
+                [InlineData("Ah")]
+                [InlineData("lsieLDOkd")]
+                [InlineData("0?>9<8:6(*4&^2#1$%")]
+                public void ShouldDegradeCorrectlyForManyCharacters(string eraseMatch)
+                {
+                    const int startEraserDurability = 50;
+                    int expectedEraserDurability = startEraserDurability - eraseMatch.Length;
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, startEraserDurability);
+
+                    _paper.Text = eraseMatch;
+                    pencil.Erase(_paper, eraseMatch);
+
+                    Assert.Equal(expectedEraserDurability, pencil.CurrentEraserDurability);
+                }
+
+                [Theory]
+                [InlineData("A h", 2)]
+                [InlineData("L\nEM\tDa\nlsjL\r\nEKD", 12)]
+                [InlineData("  \v0?>9\n<8:6 (*4&\t^2# 1$%  ", 18)]
+                public void ShouldDegradeCorrectlyForMixedCharactersAndWhitespace(string mixedString, int degradeAmount)
+                {
+                    const int startEraserDurability = 50;
+                    int expectedEraserDurability = startEraserDurability - degradeAmount;
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, startEraserDurability);
+
+                    _paper.Text = mixedString;
+                    pencil.Erase(_paper, mixedString);
+
+                    Assert.Equal(expectedEraserDurability, pencil.CurrentEraserDurability);
+                }
             }
 
-            [Theory]
-            [InlineData("sometext", "        ")]
-            [InlineData("sometextvaryinglength", "                     ")]
-            public void ShouldReplaceMatchingTextWithSpaces(string testWord, string expected)
+            public class WithoutEnoughDurability : Erasing
             {
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
-                _paper.Text = testWord;
+                [Fact]
+                public void ShouldDoNothingWithNoDurability()
+                {
+                    const string testSentence = "  \v0?>9\n<8:6 (*4&\t^2# 1$%  ";
+                    const int eraserDurability = 0;
 
-                pencil.Erase(_paper, testWord);
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
+                    _paper.Text = testSentence;
 
-                Assert.Equal(expected, _paper.Text);
-            }
+                    pencil.Erase(_paper, testSentence);
 
-            [Fact]
-            public void ShouldReplaceOnlyMatchingText()
-            {
-                const string testSentence = "this is a test sentence";
-                const string eraseWord = "test";
-                const string expectedSentence = "this is a      sentence";
+                    Assert.Equal(testSentence, _paper.Text);
+                }
 
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
-                _paper.Text = testSentence;
+                [Fact]
+                public void ShouldErasePartOfMatchingWord()
+                {
+                    const string testWord = "word";
+                    const string expectedWord = "wo  ";
+                    const int eraserDurability = 2;
 
-                pencil.Erase(_paper, eraseWord);
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
+                    _paper.Text = testWord;
 
-                Assert.Equal(expectedSentence, _paper.Text);
-            }
+                    pencil.Erase(_paper, testWord);
 
-            [Fact]
-            public void ShouldOnlyReplaceTheLastMatch()
-            {
-                const string testSentence = "Not this but this";
-                const string eraseWord = "this";
-                const string expectedSentence = "Not this but     ";
+                    Assert.Equal(expectedWord, _paper.Text);
+                }
 
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
-                _paper.Text = testSentence;
+                [Fact]
+                public void ShouldEraseCorrectPartOfMatchThatIncludesWhitespace()
+                {
+                    const string testSentence = "This is a test sentence.";
+                    const string eraseSection = "is a test";
+                    const string expectedSentence = "This i         sentence.";
+                    const int eraserDurability = 6;
 
-                pencil.Erase(_paper, eraseWord);
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
+                    _paper.Text = testSentence;
 
-                Assert.Equal(expectedSentence, _paper.Text);
-            }
+                    pencil.Erase(_paper, eraseSection);
 
-            [Fact]
-            public void ShouldDoNothingIfNoMatchIsFound()
-            {
-                const string testSentence = "Not this or this";
-                const string eraseWord = "test";
-
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
-                _paper.Text = testSentence;
-
-                pencil.Erase(_paper, eraseWord);
-
-                Assert.Equal(testSentence, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldReplaceWhitespaceWithSpaces()
-            {
-                const string testWhitespace = "  \t\r\n\f\v  ";
-                const string expected = "         ";
-
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
-                _paper.Text = testWhitespace;
-
-                pencil.Erase(_paper, testWhitespace);
-
-                Assert.Equal(expected, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldNotIgnoreCaseWhenMatching()
-            {
-                const string testSentence = "This but not this";
-                const string eraseWord = "This";
-                const string expectedSentence = "     but not this";
-
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
-                _paper.Text = testSentence;
-
-                pencil.Erase(_paper, eraseWord);
-
-                Assert.Equal(expectedSentence, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldDegradeByOneWhenErasingOneCharacter()
-            {
-                const string testSentence = "This is a sentence";
-                const string eraseLetter = "a";
-                const int eraserDurability = 5;
-                const int expectedDurability = 4;
-
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
-                _paper.Text = testSentence;
-
-                pencil.Erase(_paper, eraseLetter);
-
-                Assert.Equal(expectedDurability, pencil.CurrentEraserDurability);
-            }
-
-            [Theory]
-            [InlineData("Ah")]
-            [InlineData("lsieLDOkd")]
-            [InlineData("0?>9<8:6(*4&^2#1$%")]
-            public void ShouldDegradeCorrectlyForManyCharacters(string eraseMatch)
-            {
-                const int startEraserDurability = 50;
-                int expectedEraserDurability = startEraserDurability - eraseMatch.Length;
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, startEraserDurability);
-
-                _paper.Text = eraseMatch;
-                pencil.Erase(_paper, eraseMatch);
-
-                Assert.Equal(expectedEraserDurability, pencil.CurrentEraserDurability);
-            }
-
-            [Theory]
-            [InlineData("A h", 2)]
-            [InlineData("L\nEM\tDa\nlsjL\r\nEKD", 12)]
-            [InlineData("  \v0?>9\n<8:6 (*4&\t^2# 1$%  ", 18)]
-            public void ShouldDegradeCorrectlyForMixedCharactersAndWhitespace(string mixedString, int degradeAmount)
-            {
-                const int startEraserDurability = 50;
-                int expectedEraserDurability = startEraserDurability - degradeAmount;
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, startEraserDurability);
-
-                _paper.Text = mixedString;
-                pencil.Erase(_paper, mixedString);
-
-                Assert.Equal(expectedEraserDurability, pencil.CurrentEraserDurability);
-            }
-
-            [Fact]
-            public void ShouldDoNothingWithNoDurability()
-            {
-                const string testSentence = "  \v0?>9\n<8:6 (*4&\t^2# 1$%  ";
-                const int eraserDurability = 0;
-
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
-                _paper.Text = testSentence;
-
-                pencil.Erase(_paper, testSentence);
-
-                Assert.Equal(testSentence, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldErasePartOfMatchWordWithoutEnoughDurability()
-            {
-                const string testWord = "word";
-                const string expectedWord = "wo  ";
-                const int eraserDurability = 2;
-
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
-                _paper.Text = testWord;
-
-                pencil.Erase(_paper, testWord);
-
-                Assert.Equal(expectedWord, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldErasePartOfMatchIncludingWhitespaceWithoutEnoughDurability()
-            {
-                const string testSentence = "This is a test sentence.";
-                const string eraseSection = "is a test";
-                const string expectedSentence = "This i         sentence.";
-                const int eraserDurability = 6;
-
-                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
-                _paper.Text = testSentence;
-
-                pencil.Erase(_paper, eraseSection);
-
-                Assert.Equal(expectedSentence, _paper.Text);
+                    Assert.Equal(expectedSentence, _paper.Text);
+                }
             }
 
             // Should correctly erase part of match without enough durability for

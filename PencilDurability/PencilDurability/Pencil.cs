@@ -87,8 +87,8 @@ namespace PencilDurability
         private string GetAdjustedEraseMatchText(string matchText, int matchesNeeded)
         {
             string adjustedText = matchText.Substring(matchText.Length - matchesNeeded);
-
             int adjustedTextMatches = GetNonWhitespaceCount(adjustedText);
+
             if (adjustedTextMatches == matchesNeeded)
             {
                 return adjustedText;

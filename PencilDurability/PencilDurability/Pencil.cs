@@ -60,21 +60,26 @@ namespace PencilDurability
             CurrentDurability = _originalDurability;
         }
 
-        public void Erase(Paper paper, string text)
+        public void Erase(Paper paper, string matchText)
         {
-            int lastMatchIndex = paper.Text.LastIndexOf(text);
-
-            if (lastMatchIndex < 0 || CurrentEraserDurability < 1)
+            if (CurrentEraserDurability < 1 || !paper.Text.Contains(matchText))
             {
                 return;
             }
 
-            CurrentEraserDurability -= Regex.Matches(text, _matchNonWhitespace).Count;
+            string adjustedMatchText = matchText;
+            if (matchText.Length > CurrentEraserDurability)
+            {
+                adjustedMatchText = matchText.Substring(matchText.Length - CurrentEraserDurability);
+            }
+
+            int lastMatchIndex = paper.Text.LastIndexOf(adjustedMatchText);
+            CurrentEraserDurability -= Regex.Matches(adjustedMatchText, _matchNonWhitespace).Count;
 
             var paperText = new StringBuilder(paper.Text);
-            var replacementString = new string(_EraseReplacementCharacter, text.Length);
+            var replacementString = new string(_EraseReplacementCharacter, adjustedMatchText.Length);
 
-            paperText.Replace(text, replacementString, lastMatchIndex, text.Length);
+            paperText.Replace(adjustedMatchText, replacementString, lastMatchIndex, adjustedMatchText.Length);
 
             paper.Text = paperText.ToString();
         }

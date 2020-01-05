@@ -463,8 +463,29 @@ namespace PencilDurabilityTests
                 Assert.Equal(testSentence, _paper.Text);
             }
 
-            // Should erase part of match if not enough durability
-            //      erase characters right to left
+            [Fact]
+            public void ShouldErasePartOfMatchWordWithoutEnoughDurability()
+            {
+                const string testWord = "word";
+                const string expectedWord = "wo  ";
+                const int eraserDurability = 2;
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
+                _paper.Text = testWord;
+
+                pencil.Erase(_paper, testWord);
+
+                Assert.Equal(expectedWord, _paper.Text);
+            }
+
+            // Should correctly erase part of match without enough durability for
+            //   sentence
+            //   middle of sentence
+
+            // if adjusted text matches something found first, should still erase from the full match section.
+            //    match on "thing" with 3 durability in:
+            //    "things running"
+            //    could erase "running"s "ing" instead of "thing"s "ing"
 
             // Eraser durability can't become negative
         }

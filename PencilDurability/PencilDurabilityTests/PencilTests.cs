@@ -478,8 +478,23 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedWord, _paper.Text);
             }
 
+            [Fact]
+            public void ShouldErasePartOfMatchIncludingWhitespaceWithoutEnoughDurability()
+            {
+                const string testSentence = "This is a test sentence.";
+                const string eraseSection = "is a test";
+                const string expectedSentence = "This i         sentence.";
+                const int eraserDurability = 6;
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
+                _paper.Text = testSentence;
+
+                pencil.Erase(_paper, eraseSection);
+
+                Assert.Equal(expectedSentence, _paper.Text);
+            }
+
             // Should correctly erase part of match without enough durability for
-            //   sentence
             //   middle of sentence
 
             // if adjusted text matches something found first, should still erase from the full match section.

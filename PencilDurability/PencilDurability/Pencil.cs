@@ -68,13 +68,13 @@ namespace PencilDurability
             }
 
             string adjustedMatchText = matchText;
-            if (matchText.Length > CurrentEraserDurability)
+            if (GetNonWhitespaceCount(matchText) > CurrentEraserDurability)
             {
-                adjustedMatchText = matchText.Substring(matchText.Length - CurrentEraserDurability);
+                adjustedMatchText = GetAdjustedEraseMatchText(matchText, CurrentEraserDurability);
             }
 
             int lastMatchIndex = paper.Text.LastIndexOf(adjustedMatchText);
-            CurrentEraserDurability -= Regex.Matches(adjustedMatchText, _matchNonWhitespace).Count;
+            CurrentEraserDurability -= GetNonWhitespaceCount(adjustedMatchText);
 
             var paperText = new StringBuilder(paper.Text);
             var replacementString = new string(_EraseReplacementCharacter, adjustedMatchText.Length);
@@ -82,6 +82,29 @@ namespace PencilDurability
             paperText.Replace(adjustedMatchText, replacementString, lastMatchIndex, adjustedMatchText.Length);
 
             paper.Text = paperText.ToString();
+        }
+
+        private string GetAdjustedEraseMatchText(string matchText, int matchesNeeded)
+        {
+            string adjustedText = matchText.Substring(matchText.Length - matchesNeeded);
+
+            int adjustedTextMatches = GetNonWhitespaceCount(adjustedText);
+            if (adjustedTextMatches == matchesNeeded)
+            {
+                return adjustedText;
+            }
+            else
+            {
+                string firstHalf = matchText.Substring(0, matchText.Length - matchesNeeded);
+                int newCount = matchesNeeded - adjustedTextMatches;
+
+                return GetAdjustedEraseMatchText(firstHalf, newCount) + adjustedText;
+            }
+        }
+
+        private int GetNonWhitespaceCount(string text)
+        {
+            return Regex.Matches(text, _matchNonWhitespace).Count;
         }
 
         private bool AdjustDurability(string currentLetter)

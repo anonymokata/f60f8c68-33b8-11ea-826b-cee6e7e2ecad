@@ -204,6 +204,21 @@ namespace PencilDurabilityTests
                 }
 
                 [Theory]
+                [InlineData("321654987")]
+                [InlineData(")(*&^%%#$@#$!~`_+-=")]
+                [InlineData("{}:\">?<[];',.|\\")]
+                public void ShouldDegradCorrectlyforManyRancomCharecters(string miscCharacters)
+                {
+                    const int startDurability = 20;
+                    int expectedDurability = startDurability - miscCharacters.Length;
+                    var pencil = new Pencil(startDurability, _arbitraryLength, _arbitraryEraserDurability);
+
+                    pencil.Write(_paper, miscCharacters);
+
+                    Assert.Equal(expectedDurability, pencil.CurrentDurability);
+                }
+
+                [Theory]
                 [InlineData("Ah", 3)]
                 [InlineData("rD", 3)]
                 [InlineData("LEMDalsjLEKD", 20)]

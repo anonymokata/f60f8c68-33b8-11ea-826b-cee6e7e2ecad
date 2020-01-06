@@ -7,7 +7,7 @@ namespace PencilDurability
     public class Pencil
     {
         private readonly int _originalDurability;
-        private const int _LowercaseDegradeValue = 1;
+        private const int _DefaultDegradeValue = 1;
         private const int _UppercaseDegradeValue = 2;
         private const string _WriteFailedCharacter = " ";
         private const char _EraseReplacementCharacter = ' ';
@@ -117,10 +117,10 @@ namespace PencilDurability
                 return true;
             }
 
-            bool isLowercase = Regex.IsMatch(currentLetter, "[a-z]");
-            if (isLowercase && CurrentDurability >= _LowercaseDegradeValue)
+            bool isNonWhitespace = Regex.IsMatch(currentLetter, _matchNonWhitespace);
+            if (!isUppercase && isNonWhitespace && CurrentDurability >= _DefaultDegradeValue)
             {
-                CurrentDurability -= _LowercaseDegradeValue;
+                CurrentDurability -= _DefaultDegradeValue;
                 return true;
             }
 

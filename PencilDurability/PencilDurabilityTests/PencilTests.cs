@@ -6,7 +6,6 @@ namespace PencilDurabilityTests
 {
     public class PencilTests
     {
-        // TODO: all characters not explicitly Uppercase or whitespace will be considered lowercase.
         private readonly Paper _paper;
         private readonly int _arbitraryDurability;
         private readonly int _arbitraryLength;
@@ -187,6 +186,19 @@ namespace PencilDurabilityTests
                     var pencil = new Pencil(startDurability, _arbitraryLength, _arbitraryEraserDurability);
 
                     pencil.Write(_paper, uppercaseLetters);
+
+                    Assert.Equal(expectedDurability, pencil.CurrentDurability);
+                }
+
+                [Fact]
+                public void ShouldDefaultDegradingByOneIfNotWhitespaceOrUppercase()
+                {
+                    const string otherCharecter = "?";
+                    const int startDurability = 5;
+                    const int expectedDurability = 4;
+                    var pencil = new Pencil(startDurability, _arbitraryLength, _arbitraryEraserDurability);
+
+                    pencil.Write(_paper, otherCharecter);
 
                     Assert.Equal(expectedDurability, pencil.CurrentDurability);
                 }

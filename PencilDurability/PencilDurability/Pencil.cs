@@ -16,12 +16,12 @@ namespace PencilDurability
         public Pencil(int durability, int length, int eraserDurability)
         {
             _originalDurability = durability;
-            CurrentDurability = durability;
+            CurrentPointDurability = durability;
             CurrentLength = length;
             CurrentEraserDurability = eraserDurability;
         }
 
-        public int CurrentDurability { get; private set; }
+        public int CurrentPointDurability { get; private set; }
 
         public int CurrentLength { get; private set; }
 
@@ -34,7 +34,7 @@ namespace PencilDurability
             for (int i = 0; i < text.Length; i++)
             {
                 string currentCharacter = text[i].ToString();
-                bool canWrite = AdjustDurability(currentCharacter);
+                bool canWrite = AdjustPointDurability(currentCharacter);
 
                 if (!canWrite && Regex.IsMatch(currentCharacter, _matchNonWhitespace))
                 {
@@ -57,7 +57,7 @@ namespace PencilDurability
             }
 
             CurrentLength--;
-            CurrentDurability = _originalDurability;
+            CurrentPointDurability = _originalDurability;
         }
 
         public void Erase(Paper paper, string matchText)
@@ -108,19 +108,19 @@ namespace PencilDurability
             return Regex.Matches(text, _matchNonWhitespace).Count;
         }
 
-        private bool AdjustDurability(string currentLetter)
+        private bool AdjustPointDurability(string currentLetter)
         {
             bool isUppercase = Regex.IsMatch(currentLetter, "[A-Z]");
-            if (isUppercase && CurrentDurability >= _UppercaseDegradeValue)
+            if (isUppercase && CurrentPointDurability >= _UppercaseDegradeValue)
             {
-                CurrentDurability -= _UppercaseDegradeValue;
+                CurrentPointDurability -= _UppercaseDegradeValue;
                 return true;
             }
 
             bool isNonWhitespace = Regex.IsMatch(currentLetter, _matchNonWhitespace);
-            if (!isUppercase && isNonWhitespace && CurrentDurability >= _DefaultDegradeValue)
+            if (!isUppercase && isNonWhitespace && CurrentPointDurability >= _DefaultDegradeValue)
             {
-                CurrentDurability -= _DefaultDegradeValue;
+                CurrentPointDurability -= _DefaultDegradeValue;
                 return true;
             }
 

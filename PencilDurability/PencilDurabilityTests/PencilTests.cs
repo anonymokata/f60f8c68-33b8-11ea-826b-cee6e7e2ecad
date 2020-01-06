@@ -141,7 +141,7 @@ namespace PencilDurabilityTests
 
                     pencil.Write(_paper, lowercaseLetter);
 
-                    Assert.Equal(startDurability - lowercaseDegradeValue, pencil.CurrentDurability);
+                    Assert.Equal(startDurability - lowercaseDegradeValue, pencil.CurrentPointDurability);
                 }
 
                 [Theory]
@@ -157,7 +157,7 @@ namespace PencilDurabilityTests
 
                     pencil.Write(_paper, lowercaseLetters);
 
-                    Assert.Equal(expectedDurability, pencil.CurrentDurability);
+                    Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
 
                 [Fact]
@@ -170,7 +170,7 @@ namespace PencilDurabilityTests
 
                     pencil.Write(_paper, uppercaseLetter);
 
-                    Assert.Equal(startDurability - uppercaseDegradeValue, pencil.CurrentDurability);
+                    Assert.Equal(startDurability - uppercaseDegradeValue, pencil.CurrentPointDurability);
                 }
 
                 [Theory]
@@ -187,7 +187,7 @@ namespace PencilDurabilityTests
 
                     pencil.Write(_paper, uppercaseLetters);
 
-                    Assert.Equal(expectedDurability, pencil.CurrentDurability);
+                    Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
 
                 [Fact]
@@ -200,7 +200,7 @@ namespace PencilDurabilityTests
 
                     pencil.Write(_paper, otherCharecter);
 
-                    Assert.Equal(expectedDurability, pencil.CurrentDurability);
+                    Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
 
                 [Theory]
@@ -215,7 +215,7 @@ namespace PencilDurabilityTests
 
                     pencil.Write(_paper, miscCharacters);
 
-                    Assert.Equal(expectedDurability, pencil.CurrentDurability);
+                    Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
 
                 [Theory]
@@ -233,7 +233,7 @@ namespace PencilDurabilityTests
 
                     pencil.Write(_paper, mixedCase);
 
-                    Assert.Equal(expectedDurability, pencil.CurrentDurability);
+                    Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
 
                 [Theory]
@@ -251,7 +251,7 @@ namespace PencilDurabilityTests
 
                     pencil.Write(_paper, mixedString);
 
-                    Assert.Equal(expectedDurability, pencil.CurrentDurability);
+                    Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
 
                 [Theory]
@@ -267,7 +267,7 @@ namespace PencilDurabilityTests
 
                     pencil.Write(_paper, sentence);
 
-                    Assert.Equal(noDurability, pencil.CurrentDurability);
+                    Assert.Equal(noDurability, pencil.CurrentPointDurability);
                 }
             }
         }
@@ -284,7 +284,7 @@ namespace PencilDurabilityTests
                 pencil.Write(_paper, testSentence);
                 pencil.Sharpen();
 
-                Assert.Equal(startingDurability, pencil.CurrentDurability);
+                Assert.Equal(startingDurability, pencil.CurrentPointDurability);
             }
 
             [Fact]
@@ -311,7 +311,7 @@ namespace PencilDurabilityTests
                 pencil.Write(_paper, testSentence);
                 pencil.Sharpen();
 
-                Assert.Equal(expectedDurability, pencil.CurrentDurability);
+                Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
             }
 
             [Fact]

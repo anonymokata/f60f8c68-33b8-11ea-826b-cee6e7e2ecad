@@ -514,12 +514,23 @@ namespace PencilDurabilityTests
 
                     Assert.Equal(expectedSentence, _paper.Text);
                 }
-            }
 
-            // if adjusted text matches something found first, should still erase from the full match section.
-            //    match on "thing" with 3 durability in:
-            //    "things running"
-            //    could erase "running"s "ing" instead of "thing"s "ing"
+                [Fact]
+                public void ShouldEraseCorrectPartialMatch()
+                {
+                    const string eraseWord = "thing";
+                    const string testSentence = "things running";
+                    const string expectedSentence = "th   s running";
+                    const int eraserDurability = 3;
+
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
+                    _paper.Text = testSentence;
+
+                    pencil.Erase(_paper, eraseWord);
+
+                    Assert.Equal(expectedSentence, _paper.Text);
+                }
+            }
 
             // Eraser durability can't become negative
         }

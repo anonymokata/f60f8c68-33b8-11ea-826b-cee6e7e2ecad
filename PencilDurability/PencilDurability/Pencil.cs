@@ -73,13 +73,14 @@ namespace PencilDurability
                 adjustedMatchText = GetAdjustedEraseMatchText(matchText, CurrentEraserDurability);
             }
 
-            int lastMatchIndex = paper.Text.LastIndexOf(adjustedMatchText);
             CurrentEraserDurability -= GetNonWhitespaceCount(adjustedMatchText);
 
-            var paperText = new StringBuilder(paper.Text);
+            int matchOffset = matchText.Length - adjustedMatchText.Length;
+            int matchLocation = paper.Text.LastIndexOf(matchText) + matchOffset;
             var replacementString = new string(_EraseReplacementCharacter, adjustedMatchText.Length);
+            var paperText = new StringBuilder(paper.Text);
 
-            paperText.Replace(adjustedMatchText, replacementString, lastMatchIndex, adjustedMatchText.Length);
+            paperText.Replace(adjustedMatchText, replacementString, matchLocation, adjustedMatchText.Length);
 
             paper.Text = paperText.ToString();
         }

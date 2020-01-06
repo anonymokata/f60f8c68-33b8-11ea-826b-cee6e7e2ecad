@@ -530,9 +530,25 @@ namespace PencilDurabilityTests
 
                     Assert.Equal(expectedSentence, _paper.Text);
                 }
-            }
 
-            // Eraser durability can't become negative
+                [Theory]
+                [InlineData("jT", 1)]
+                [InlineData("t", 0)]
+                [InlineData("asdfgh", 3)]
+                [InlineData("asdT", 0)]
+                [InlineData("TTs dfkD SFg ewe", 10)]
+                public void ShouldNeverBecomeNegative(string sentence, int startDurability)
+                {
+                    const int expectedDurability = 0;
+
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, startDurability);
+                    _paper.Text = sentence;
+
+                    pencil.Erase(_paper, sentence);
+
+                    Assert.Equal(expectedDurability, pencil.CurrentEraserDurability);
+                }
+            }
         }
     }
 }

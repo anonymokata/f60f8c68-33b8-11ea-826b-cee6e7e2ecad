@@ -18,6 +18,12 @@ namespace PencilDurabilityTests
             _arbitraryLength = 99999;
             _arbitraryEraserDurability = 999999;
         }
+        
+        // TODO: try to initialize with less than 0 auto sets to 0
+        // TODO: Switch paper to an interface to allow for different objects
+        // TODO: Make interface for pencil to allow it to be mocked
+        // TODO: Make sure white space isn't erased in a partial match once 0 durability is reached
+
 
         public class Writing : PencilTests
         {

@@ -57,6 +57,16 @@ namespace PencilDurabilityTests
 
                 Assert.Equal(expectedLength, pencil.CurrentLength);
             }
+
+            [Fact]
+            public void ForNegativeEraserDurabilityShouldMakeValuePositive()
+            {
+                const int negativeEraserDurability = -10;
+                const int expectedEraserDurability = 10;
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, negativeEraserDurability);
+
+                Assert.Equal(expectedEraserDurability, pencil.CurrentEraserDurability);
+            }
         }
 
         public class Writing : PencilTests

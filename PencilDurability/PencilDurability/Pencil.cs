@@ -18,7 +18,7 @@ namespace PencilDurability
             _originalDurability = Math.Abs(durability);
             CurrentPointDurability = Math.Abs(durability);
             CurrentLength = Math.Abs(length);
-            CurrentEraserDurability = eraserDurability;
+            CurrentEraserDurability = Math.Abs(eraserDurability);
         }
 
         public int CurrentPointDurability { get; private set; }

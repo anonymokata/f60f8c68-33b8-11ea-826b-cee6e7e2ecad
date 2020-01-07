@@ -257,8 +257,6 @@ namespace PencilDurabilityTests
                 [Theory]
                 [InlineData("jT", 1)]
                 [InlineData("t", 0)]
-                [InlineData("asdfgh", 3)]
-                [InlineData("asdT", 0)]
                 [InlineData("TTs dfkD SFg ewe", 10)]
                 public void ShouldNeverBecomeNegative(string sentence, int startDurability)
                 {
@@ -561,8 +559,6 @@ namespace PencilDurabilityTests
                 [Theory]
                 [InlineData("jT", 1)]
                 [InlineData("t", 0)]
-                [InlineData("asdfgh", 3)]
-                [InlineData("asdT", 0)]
                 [InlineData("TTs dfkD SFg ewe", 10)]
                 public void ShouldNeverBecomeNegative(string sentence, int startDurability)
                 {

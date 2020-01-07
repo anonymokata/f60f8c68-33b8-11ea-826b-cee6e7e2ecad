@@ -1,5 +1,6 @@
 using Xunit;
 using PencilDurability;
+using System;
 
 namespace PencilDurabilityTests
 {
@@ -598,6 +599,22 @@ namespace PencilDurabilityTests
                     _paper.Text = testSentence;
 
                     pencil.Erase(_paper, eraseWord);
+
+                    Assert.Equal(expectedSentence, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldNotEraseMatchingWhitespaceWhenDurabilityRunsOut()
+                {
+                    const string eraseMatch = "\n\n\nis a";
+                    const string testSentence = "This\n\n\nis a sentence.";
+                    const string expectedSentence = "This\n\n\n     sentence.";
+                    const int eraserDurability = 3;
+
+                    var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, eraserDurability);
+                    _paper.Text = testSentence;
+
+                    pencil.Erase(_paper, eraseMatch);
 
                     Assert.Equal(expectedSentence, _paper.Text);
                 }

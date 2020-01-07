@@ -12,6 +12,7 @@ namespace PencilDurability
         private const string _WriteFailedCharacter = " ";
         private const char _EraseReplacementCharacter = ' ';
         private const string _matchNonWhitespace = @"\S";
+        const string _matchAllStartWhitespace = @"^\s+";
 
         public Pencil(int durability, int length, int eraserDurability)
         {
@@ -68,7 +69,7 @@ namespace PencilDurability
             }
 
             string adjustedMatchText = matchText;
-            if (GetNonWhitespaceCount(matchText) > CurrentEraserDurability)
+            if (matchText.Length > CurrentEraserDurability)
             {
                 adjustedMatchText = GetAdjustedEraseMatchText(matchText, CurrentEraserDurability);
             }
@@ -92,7 +93,7 @@ namespace PencilDurability
 
             if (adjustedTextMatches == matchesNeeded)
             {
-                return adjustedText;
+                return Regex.Replace(adjustedText, _matchAllStartWhitespace, "");
             }
             else
             {

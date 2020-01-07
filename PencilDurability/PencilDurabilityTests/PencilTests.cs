@@ -1,12 +1,11 @@
 using Xunit;
 using PencilDurability;
-using System;
 
 namespace PencilDurabilityTests
 {
     public class PencilTests
     {
-        private readonly Paper _paper;
+        private readonly IPaper _paper;
         private readonly int _arbitraryDurability;
         private readonly int _arbitraryLength;
         private readonly int _arbitraryEraserDurability;
@@ -19,8 +18,6 @@ namespace PencilDurabilityTests
             _arbitraryEraserDurability = 999999;
         }
 
-        // TODO: try to initialize with less than 0 auto sets to 0
-        // TODO: Switch paper to an interface to allow for different objects
         // TODO: Make interface for pencil to allow it to be mocked
         // TODO: Make sure white space isn't erased in a partial match once 0 durability is reached
 
@@ -32,7 +29,7 @@ namespace PencilDurabilityTests
                 const int negativeDurability = -10;
                 const int expectedDurability = 10;
                 var pencil = new Pencil(negativeDurability, _arbitraryLength, _arbitraryEraserDurability);
-              
+
                 Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
             }
 

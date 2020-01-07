@@ -27,7 +27,7 @@ namespace PencilDurability
 
         public int CurrentEraserDurability { get; private set; }
 
-        public void Write(Paper paper, string text)
+        public void Write(IPaper paper, string text)
         {
             var stringBuilder = new StringBuilder();
 
@@ -60,7 +60,7 @@ namespace PencilDurability
             CurrentPointDurability = _originalDurability;
         }
 
-        public void Erase(Paper paper, string matchText)
+        public void Erase(IPaper paper, string matchText)
         {
             if (CurrentEraserDurability < 1 || !paper.Text.Contains(matchText))
             {

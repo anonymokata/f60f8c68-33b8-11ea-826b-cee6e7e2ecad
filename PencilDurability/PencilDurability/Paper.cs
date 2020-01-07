@@ -1,6 +1,6 @@
 ﻿namespace PencilDurability
 {
-    public class Paper
+    public class Paper : IPaper
     {
         public string Text { get; set; } = "";
     }

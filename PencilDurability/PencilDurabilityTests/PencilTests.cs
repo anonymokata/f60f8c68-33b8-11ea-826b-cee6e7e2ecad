@@ -18,7 +18,6 @@ namespace PencilDurabilityTests
             _arbitraryEraserDurability = 999999;
         }
 
-        // TODO: Make interface for pencil to allow it to be mocked
         // TODO: Make sure white space isn't erased in a partial match once 0 durability is reached
 
         public class Initialization : PencilTests

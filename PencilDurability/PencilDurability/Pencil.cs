@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace PencilDurability
 {
-    public class Pencil
+    public class Pencil : IPencil
     {
         private readonly int _originalDurability;
         private const int _DefaultDegradeValue = 1;

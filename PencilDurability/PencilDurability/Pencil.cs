@@ -15,7 +15,7 @@ namespace PencilDurability
 
         public Pencil(int durability, int length, int eraserDurability)
         {
-            _originalDurability = durability;
+            _originalDurability = Math.Abs(durability);
             CurrentPointDurability = Math.Abs(durability);
             CurrentLength = length;
             CurrentEraserDurability = eraserDurability;

@@ -35,6 +35,18 @@ namespace PencilDurabilityTests
               
                 Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
             }
+
+            [Fact]
+            public void ForNegativeDurabilityShouldSharpenToThePositiveValue()
+            {
+                const int negativeDurability = -10;
+                const int expectedDurability = 10;
+                var pencil = new Pencil(negativeDurability, _arbitraryLength, _arbitraryEraserDurability);
+
+                pencil.Sharpen();
+
+                Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
+            }
         }
 
         public class Writing : PencilTests

@@ -646,9 +646,24 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedText, _paper.Text);
             }
 
+            [Fact]
+            public void ShouldOverwriteWhitespaceWithOtherWhitespace()
+            {
+                const string testWhitespace = "               ";
+                const string editText = " \t\r\n\f\v ";
+                const string expectedText = "    \t\r\n\f\v      ";
+                const int startIndex = 3;
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                _paper.Text = testWhitespace;
+
+                pencil.Edit(_paper, editText, startIndex);
+
+                Assert.Equal(expectedText, _paper.Text);
+            }
+
             // If given a string that has spaces, original text is kept.
-            // If given a string with whitespace other than spaces
-            //     text doesn't get over written (no replacing with @)
+            // If given a string with whitespace
             //     will replace other whitespace
             // start index beyond text length appends to the end.
             // Start index that causes text to be written past the end of existing text, simply appends it as if using write.

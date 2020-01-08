@@ -41,7 +41,7 @@ namespace PencilDurability
                 string currentCharacter = text[i].ToString();
                 bool canWrite = AdjustPointDurability(currentCharacter);
 
-                if (!canWrite && Regex.IsMatch(currentCharacter, _matchNonWhitespace))
+                if (!canWrite && HasNonWhitespace(currentCharacter))
                 {
                     stringBuilder.Append(_WriteFailedCharacter);
                 }
@@ -81,22 +81,21 @@ namespace PencilDurability
 
         public void Edit(IPaper paper, string editText, int startIndex)
         {
-            if (!Regex.IsMatch(editText, _matchNonWhitespace))
+            string textToReplace = paper.Text.Substring(startIndex, editText.Length);
+
+            if (HasNonWhitespace(textToReplace))
             {
-                return;
+                if (!HasNonWhitespace(editText))
+                {
+                    return;
+                }
+
+                editText = new string(_EditConflictCharacter, textToReplace.Length);
             }
 
             var paperText = new StringBuilder(paper.Text);
-            string textToReplace = paper.Text.Substring(startIndex, editText.Length);
-
-            string replacementText = editText;
-            if (Regex.IsMatch(textToReplace, _matchNonWhitespace))
-            {
-                replacementText = new string(_EditConflictCharacter, textToReplace.Length);
-            }
-
-            paperText.Remove(startIndex, replacementText.Length);
-            paperText.Insert(startIndex, replacementText);
+            paperText.Remove(startIndex, editText.Length);
+            paperText.Insert(startIndex, editText);
 
             paper.Text = paperText.ToString();
         }
@@ -135,6 +134,11 @@ namespace PencilDurability
             return Regex.Matches(text, _matchNonWhitespace).Count;
         }
 
+        private bool HasNonWhitespace(string text)
+        {
+            return Regex.IsMatch(text, _matchNonWhitespace);
+        }
+
         private bool AdjustPointDurability(string currentLetter)
         {
             bool isUppercase = Regex.IsMatch(currentLetter, "[A-Z]");
@@ -144,8 +148,7 @@ namespace PencilDurability
                 return true;
             }
 
-            bool isNonWhitespace = Regex.IsMatch(currentLetter, _matchNonWhitespace);
-            if (!isUppercase && isNonWhitespace && CurrentPointDurability >= _DefaultDegradeValue)
+            if (!isUppercase && HasNonWhitespace(currentLetter) && CurrentPointDurability >= _DefaultDegradeValue)
             {
                 CurrentPointDurability -= _DefaultDegradeValue;
                 return true;

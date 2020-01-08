@@ -81,6 +81,12 @@ namespace PencilDurability
 
         public void Edit(IPaper paper, string editText, int startIndex)
         {
+            if (startIndex >= paper.Text.Length)
+            {
+                paper.Text += editText;
+                return;
+            }
+
             string textToReplace = paper.Text.Substring(startIndex, editText.Length);
 
             if (HasNonWhitespace(textToReplace))

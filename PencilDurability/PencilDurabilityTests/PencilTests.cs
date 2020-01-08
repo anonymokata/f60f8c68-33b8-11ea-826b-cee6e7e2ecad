@@ -678,6 +678,22 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedText, _paper.Text);
             }
 
+            [Fact]
+            public void ShouldCorrectlyOverwriteBeyondExistingTextLength()
+            {
+                const string paperText = "          ";
+                const string editText = "This is a sentence.";
+                const string expectedText = "     This is a sentence.";
+                const int startIndex = 5;
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                _paper.Text = paperText;
+
+                pencil.Edit(_paper, editText, startIndex);
+
+                Assert.Equal(expectedText, _paper.Text);
+            }
+
             // Start index that causes text to be written past the end of existing text, simply appends it as if using write.
             // If given a string that has spaces, original text is kept.
 

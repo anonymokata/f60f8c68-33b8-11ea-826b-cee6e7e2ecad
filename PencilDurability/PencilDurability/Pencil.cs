@@ -12,7 +12,7 @@ namespace PencilDurability
         private const int _UppercaseDegradeValue = 2;
 
         private const string _WriteFailedCharacter = " ";
-        private const char _EraseReplacementCharacter = ' ';
+        private const char _FillerCharacter = ' ';
         private const char _EditConflictCharacter = '@';
 
         private const string _matchNonWhitespace = @"\S";
@@ -71,7 +71,7 @@ namespace PencilDurability
 
             int matchOffset = matchText.Length - adjustedMatchText.Length;
             int matchLocation = paper.Text.LastIndexOf(matchText) + matchOffset;
-            var replacementString = new string(_EraseReplacementCharacter, adjustedMatchText.Length);
+            var replacementString = new string(_FillerCharacter, adjustedMatchText.Length);
             var paperText = new StringBuilder(paper.Text);
 
             paperText.Replace(adjustedMatchText, replacementString, matchLocation, adjustedMatchText.Length);
@@ -85,6 +85,13 @@ namespace PencilDurability
             {
                 paper.Text += editText;
                 return;
+            }
+
+            if (editText.Length + startIndex >= paper.Text.Length)
+            {
+                int overlapLength = paper.Text.Length - startIndex;
+                int excessLength =  editText.Length - overlapLength;
+                paper.Text += new string(_FillerCharacter, excessLength);
             }
 
             string textToReplace = paper.Text.Substring(startIndex, editText.Length);

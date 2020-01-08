@@ -1,5 +1,6 @@
 using Xunit;
 using PencilDurability;
+using System;
 
 namespace PencilDurabilityTests
 {
@@ -577,6 +578,36 @@ namespace PencilDurabilityTests
                     Assert.Equal(expectedDurability, pencil.CurrentEraserDurability);
                 }
             }
+        }
+
+        public class Editing : PencilTests
+        {
+            [Fact]
+            public void ShoulAddTextAtGivenIndex()
+            {
+                const string paperText = "          ";
+                const string editText = "Added";
+                const string expectedText = "  Added   ";
+                const int startIndex = 2;
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                _paper.Text = paperText;
+
+                pencil.Edit(_paper, editText, startIndex);
+
+                Assert.Equal(expectedText, _paper.Text);
+            }
+
+            // Doesn't shift text over to make room if not enough whitespace
+            //      Writing over text replaces it with "@"
+            // start index beyond text length appends to the end.
+            // If given a string that has spaces, original text is kept.
+            // If given a string with whitespace other than spaces
+            //     text doesn't get over written (no replacing with @)
+            //     will replace other whitespace
+            
+            // Point degradation should act the same as normal writing.
+            // Degrade normally as if the character was written and "@" wasn't
         }
 
         public class Sharpening : PencilTests

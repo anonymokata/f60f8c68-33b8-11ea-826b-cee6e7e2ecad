@@ -75,6 +75,15 @@ namespace PencilDurability
             paper.Text = paperText.ToString();
         }
 
+        public void Edit(IPaper paper, string editText, int startIndex)
+        {
+            var paperText = new StringBuilder(paper.Text);
+            paperText.Remove(startIndex, editText.Length);
+            paperText.Insert(startIndex, editText);
+
+            paper.Text = paperText.ToString();
+        }
+
         public void Sharpen()
         {
             if (CurrentLength <= 0)

@@ -7,10 +7,14 @@ namespace PencilDurability
     public class Pencil : IPencil
     {
         private readonly int _originalDurability;
+
         private const int _DefaultDegradeValue = 1;
         private const int _UppercaseDegradeValue = 2;
+
         private const string _WriteFailedCharacter = " ";
         private const char _EraseReplacementCharacter = ' ';
+        private const char _EditConflictCharacter = '@';
+
         private const string _matchNonWhitespace = @"\S";
         const string _matchAllStartWhitespace = @"^\s+";
 
@@ -78,8 +82,16 @@ namespace PencilDurability
         public void Edit(IPaper paper, string editText, int startIndex)
         {
             var paperText = new StringBuilder(paper.Text);
-            paperText.Remove(startIndex, editText.Length);
-            paperText.Insert(startIndex, editText);
+            string textToReplace = paper.Text.Substring(startIndex, editText.Length);
+
+            string replacementText = editText;
+            if (Regex.IsMatch(textToReplace, _matchNonWhitespace))
+            {
+                replacementText = new string(_EditConflictCharacter, textToReplace.Length);
+            }
+
+            paperText.Remove(startIndex, replacementText.Length);
+            paperText.Insert(startIndex, replacementText);
 
             paper.Text = paperText.ToString();
         }

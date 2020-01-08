@@ -598,6 +598,22 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedText, _paper.Text);
             }
 
+            [Fact]
+            public void ShouldOverwritePreExistingTextWithConflictCharacter()
+            {
+                const string paperText = "This is a sentence.";
+                const string editText = "Added";
+                const string expectedText = "This is a se@@@@@e.";
+                const int startIndex = 12;
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                _paper.Text = paperText;
+
+                pencil.Edit(_paper, editText, startIndex);
+
+                Assert.Equal(expectedText, _paper.Text);
+            }
+
             // Doesn't shift text over to make room if not enough whitespace
             //      Writing over text replaces it with "@"
             // start index beyond text length appends to the end.
@@ -605,7 +621,8 @@ namespace PencilDurabilityTests
             // If given a string with whitespace other than spaces
             //     text doesn't get over written (no replacing with @)
             //     will replace other whitespace
-            
+            // Start index that causes text to be written past the end of existing text, simply appends it as if using write.
+
             // Point degradation should act the same as normal writing.
             // Degrade normally as if the character was written and "@" wasn't
         }

@@ -81,6 +81,11 @@ namespace PencilDurability
 
         public void Edit(IPaper paper, string editText, int startIndex)
         {
+            if (!Regex.IsMatch(editText, _matchNonWhitespace))
+            {
+                return;
+            }
+
             var paperText = new StringBuilder(paper.Text);
             string textToReplace = paper.Text.Substring(startIndex, editText.Length);
 

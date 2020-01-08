@@ -630,11 +630,27 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedText, _paper.Text);
             }
 
-            // start index beyond text length appends to the end.
+            [Fact]
+            public void ShouldNotOverwriteTextWithWhitespace()
+            {
+                const string testSentence = "This is a sentence.";
+                const string editText = " \t\r\n\f\v ";
+                const string expectedText = "This is a sentence.";
+                const int startIndex = 11;
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                _paper.Text = testSentence;
+
+                pencil.Edit(_paper, editText, startIndex);
+
+                Assert.Equal(expectedText, _paper.Text);
+            }
+
             // If given a string that has spaces, original text is kept.
             // If given a string with whitespace other than spaces
             //     text doesn't get over written (no replacing with @)
             //     will replace other whitespace
+            // start index beyond text length appends to the end.
             // Start index that causes text to be written past the end of existing text, simply appends it as if using write.
 
             // Point degradation should act the same as normal writing.

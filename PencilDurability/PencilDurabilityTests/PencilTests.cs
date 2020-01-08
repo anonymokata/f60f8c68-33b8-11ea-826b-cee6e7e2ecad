@@ -314,61 +314,6 @@ namespace PencilDurabilityTests
             }
         }
 
-        public class Sharpening : PencilTests
-        {
-            [Fact]
-            public void ShouldResetDurabilityToOriginalValue()
-            {
-                const int startingDurability = 100;
-                const string testSentence = "Text to waste pencil durability for testing sharpening abilities";
-                var pencil = new Pencil(startingDurability, _arbitraryLength, _arbitraryEraserDurability);
-
-                pencil.Write(_paper, testSentence);
-                pencil.Sharpen();
-
-                Assert.Equal(startingDurability, pencil.CurrentPointDurability);
-            }
-
-            [Fact]
-            public void ShouldReducePencilLengthByOne()
-            {
-                const int startingLength = 5;
-                const int expectedLength = 4;
-                var pencil = new Pencil(_arbitraryDurability, startingLength, _arbitraryEraserDurability);
-
-                pencil.Sharpen();
-
-                Assert.Equal(expectedLength, pencil.CurrentLength);
-            }
-
-            [Fact]
-            public void ShouldNotResetDurabilityWhenZeroLength()
-            {
-                const int startingDurability = 100;
-                const int startingLength = 0;
-                const string testSentence = "Keep it simple";
-                const int expectedDurability = 87;
-                var pencil = new Pencil(startingDurability, startingLength, _arbitraryEraserDurability);
-
-                pencil.Write(_paper, testSentence);
-                pencil.Sharpen();
-
-                Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
-            }
-
-            [Fact]
-            public void ShouldNotAllowLengthToBecomeNegative()
-            {
-                const int startingLength = 0;
-                const int expectedLength = 0;
-                var pencil = new Pencil(_arbitraryDurability, startingLength, _arbitraryEraserDurability);
-
-                pencil.Sharpen();
-
-                Assert.Equal(expectedLength, pencil.CurrentLength);
-            }
-        }
-
         public class Erasing : PencilTests
         {
             public class WithEnoughDurability : PencilTests
@@ -631,6 +576,61 @@ namespace PencilDurabilityTests
 
                     Assert.Equal(expectedDurability, pencil.CurrentEraserDurability);
                 }
+            }
+        }
+
+        public class Sharpening : PencilTests
+        {
+            [Fact]
+            public void ShouldResetDurabilityToOriginalValue()
+            {
+                const int startingDurability = 100;
+                const string testSentence = "Text to waste pencil durability for testing sharpening abilities";
+                var pencil = new Pencil(startingDurability, _arbitraryLength, _arbitraryEraserDurability);
+
+                pencil.Write(_paper, testSentence);
+                pencil.Sharpen();
+
+                Assert.Equal(startingDurability, pencil.CurrentPointDurability);
+            }
+
+            [Fact]
+            public void ShouldReducePencilLengthByOne()
+            {
+                const int startingLength = 5;
+                const int expectedLength = 4;
+                var pencil = new Pencil(_arbitraryDurability, startingLength, _arbitraryEraserDurability);
+
+                pencil.Sharpen();
+
+                Assert.Equal(expectedLength, pencil.CurrentLength);
+            }
+
+            [Fact]
+            public void ShouldNotResetDurabilityWhenZeroLength()
+            {
+                const int startingDurability = 100;
+                const int startingLength = 0;
+                const string testSentence = "Keep it simple";
+                const int expectedDurability = 87;
+                var pencil = new Pencil(startingDurability, startingLength, _arbitraryEraserDurability);
+
+                pencil.Write(_paper, testSentence);
+                pencil.Sharpen();
+
+                Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
+            }
+
+            [Fact]
+            public void ShouldNotAllowLengthToBecomeNegative()
+            {
+                const int startingLength = 0;
+                const int expectedLength = 0;
+                var pencil = new Pencil(_arbitraryDurability, startingLength, _arbitraryEraserDurability);
+
+                pencil.Sharpen();
+
+                Assert.Equal(expectedLength, pencil.CurrentLength);
             }
         }
     }

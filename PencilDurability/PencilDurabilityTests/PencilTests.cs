@@ -583,7 +583,7 @@ namespace PencilDurabilityTests
         public class Editing : PencilTests
         {
             [Fact]
-            public void ShoulAddTextAtGivenIndex()
+            public void ShouldAddTextAtGivenIndex()
             {
                 const string paperText = "          ";
                 const string editText = "Added";
@@ -592,6 +592,22 @@ namespace PencilDurabilityTests
 
                 var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
                 _paper.Text = paperText;
+
+                pencil.Edit(_paper, editText, startIndex);
+
+                Assert.Equal(expectedText, _paper.Text);
+            }
+
+            [Fact]
+            public void ShouldReplaceWhitespaceAtGivenIndex()
+            {
+                const string testWhitespace = "  \t\r\n\f\v  ";
+                const string editText = "editing";
+                const string expectedText = " editing ";
+                const int startIndex = 1;
+
+                var pencil = new Pencil(_arbitraryDurability, _arbitraryLength, _arbitraryEraserDurability);
+                _paper.Text = testWhitespace;
 
                 pencil.Edit(_paper, editText, startIndex);
 
@@ -614,8 +630,6 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedText, _paper.Text);
             }
 
-            // Doesn't shift text over to make room if not enough whitespace
-            //      Writing over text replaces it with "@"
             // start index beyond text length appends to the end.
             // If given a string that has spaces, original text is kept.
             // If given a string with whitespace other than spaces

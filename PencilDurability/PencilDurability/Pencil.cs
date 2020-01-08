@@ -24,9 +24,9 @@ namespace PencilDurability
 
         public int CurrentPointDurability { get; private set; }
 
-        public int CurrentLength { get; private set; }
-
         public int CurrentEraserDurability { get; private set; }
+
+        public int CurrentLength { get; private set; }
 
         public void Write(IPaper paper, string text)
         {
@@ -48,17 +48,6 @@ namespace PencilDurability
             }
 
             paper.Text += stringBuilder.ToString();
-        }
-
-        public void Sharpen()
-        {
-            if (CurrentLength <= 0)
-            {
-                return;
-            }
-
-            CurrentLength--;
-            CurrentPointDurability = _originalDurability;
         }
 
         public void Erase(IPaper paper, string matchText)
@@ -84,6 +73,17 @@ namespace PencilDurability
             paperText.Replace(adjustedMatchText, replacementString, matchLocation, adjustedMatchText.Length);
 
             paper.Text = paperText.ToString();
+        }
+
+        public void Sharpen()
+        {
+            if (CurrentLength <= 0)
+            {
+                return;
+            }
+
+            CurrentLength--;
+            CurrentPointDurability = _originalDurability;
         }
 
         private string GetAdjustedEraseMatchText(string matchText, int matchesNeeded)

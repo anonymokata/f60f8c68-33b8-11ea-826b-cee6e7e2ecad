@@ -1,6 +1,5 @@
 using Xunit;
 using PencilDurability;
-using System;
 
 namespace PencilDurabilityTests
 {
@@ -18,8 +17,6 @@ namespace PencilDurabilityTests
             _arbitraryLength = 99999;
             _arbitraryEraserDurability = 999999;
         }
-
-        // TODO: Make sure white space isn't erased in a partial match once 0 durability is reached
 
         public class Initialization : PencilTests
         {

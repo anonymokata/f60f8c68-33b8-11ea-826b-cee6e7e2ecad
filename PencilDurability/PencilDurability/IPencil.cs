@@ -2,12 +2,16 @@
 {
     public interface IPencil
     {
-        int CurrentEraserDurability { get; }
-        int CurrentLength { get; }
         int CurrentPointDurability { get; }
 
+        int CurrentEraserDurability { get; }
+
+        int CurrentLength { get; }
+
         void Erase(IPaper paper, string matchText);
-        void Sharpen();
+
         void Write(IPaper paper, string text);
+
+        void Sharpen();
     }
 }

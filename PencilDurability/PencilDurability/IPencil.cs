@@ -8,9 +8,11 @@
 
         int CurrentLength { get; }
 
+        void Write(IPaper paper, string text);
+
         void Erase(IPaper paper, string matchText);
 
-        void Write(IPaper paper, string text);
+        void Edit(IPaper paper, string editText, int startIndex);
 
         void Sharpen();
     }

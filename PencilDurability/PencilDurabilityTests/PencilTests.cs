@@ -573,143 +573,137 @@ namespace PencilDurabilityTests
 
         public class Editing : PencilTests
         {
-            [Fact]
-            public void ShouldAddTextAtGivenIndex()
+            public class Text : Editing
             {
-                const string paperText = "          ";
-                const string editText = "Added";
-                const string expectedText = "  Added   ";
-                const int startIndex = 2;
-                IPencil pencil = MakePencil();
-                _paper.Text = paperText;
+                [Fact]
+                public void ShouldOverwriteWhitespaceAtGivenIndex()
+                {
+                    const string testWhitespace = "  \t\r\n\f\v  ";
+                    const string editText = "editing";
+                    const string expectedText = " editing ";
+                    const int startIndex = 1;
+                    IPencil pencil = MakePencil();
+                    _paper.Text = testWhitespace;
 
-                pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(_paper, editText, startIndex);
 
-                Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldOverwritePreExistingTextWithConflictCharacter()
+                {
+                    const string paperText = "This is a sentence.";
+                    const string editText = "Added";
+                    const string expectedText = "This is a se@@@@@e.";
+                    const int startIndex = 12;
+                    IPencil pencil = MakePencil();
+                    _paper.Text = paperText;
+
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedText, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldNotOverwriteTextWithWhitespace()
+                {
+                    const string testSentence = "This is a sentence.";
+                    const string editText = " \t\r\n\f\v ";
+                    const string expectedText = "This is a sentence.";
+                    const int startIndex = 11;
+                    IPencil pencil = MakePencil();
+                    _paper.Text = testSentence;
+
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedText, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldOverwriteWhitespaceWithOtherWhitespace()
+                {
+                    const string testWhitespace = "               ";
+                    const string editText = " \t\r\n\f\v ";
+                    const string expectedText = "    \t\r\n\f\v      ";
+                    const int startIndex = 3;
+                    IPencil pencil = MakePencil();
+                    _paper.Text = testWhitespace;
+
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedText, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldAppendToPaperWhenStartIndexIsTooLarge()
+                {
+                    const string testSentence = "This is a sentence.";
+                    const string editText = " This is another sentence.";
+                    const string expectedText = "This is a sentence. This is another sentence.";
+                    const int startIndex = 19;
+                    IPencil pencil = MakePencil();
+                    _paper.Text = testSentence;
+
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedText, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldOverwriteBeyondExistingTextLength()
+                {
+                    const string paperText = "          ";
+                    const string editText = "This is a sentence.";
+                    const string expectedText = "     This is a sentence.";
+                    const int startIndex = 5;
+                    IPencil pencil = MakePencil();
+                    _paper.Text = paperText;
+
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedText, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldCorrectlyConflictWithTextAndOverwriteWhitespace()
+                {
+                    const string testWhitespace = "This is a sentence.";
+                    const string editText = "overwrite";
+                    const string expectedText = "Thi@v@@w@i@@ntence.";
+                    const int startIndex = 3;
+                    IPencil pencil = MakePencil();
+                    _paper.Text = testWhitespace;
+
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedText, _paper.Text);
+                }
+
+                [Fact]
+                public void ShouldSetNegativeStartIndexToZero()
+                {
+                    const string textSentence = "          ";
+                    const string editText = "Negative";
+                    const string expectedText = "Negative  ";
+                    const int startIndex = -20;
+                    IPencil pencil = MakePencil();
+                    _paper.Text = textSentence;
+
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedText, _paper.Text);
+                }
             }
 
-            [Fact]
-            public void ShouldReplaceWhitespaceAtGivenIndex()
+            public class WithEnoughDurability
             {
-                const string testWhitespace = "  \t\r\n\f\v  ";
-                const string editText = "editing";
-                const string expectedText = " editing ";
-                const int startIndex = 1;
-                IPencil pencil = MakePencil();
-                _paper.Text = testWhitespace;
+                // starting index too large should use WriteMethod? (unable to explicitly test this method gets called)
+                // point should dull when text is added in middle of text
+                // point should not degrade for conflict character being written.
 
-                pencil.Edit(_paper, editText, startIndex);
-
-                Assert.Equal(expectedText, _paper.Text);
+                // helper method adjusts point durability.... don't need many tests here?
             }
-
-            [Fact]
-            public void ShouldOverwritePreExistingTextWithConflictCharacter()
-            {
-                const string paperText = "This is a sentence.";
-                const string editText = "Added";
-                const string expectedText = "This is a se@@@@@e.";
-                const int startIndex = 12;
-                IPencil pencil = MakePencil();
-                _paper.Text = paperText;
-
-                pencil.Edit(_paper, editText, startIndex);
-
-                Assert.Equal(expectedText, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldNotOverwriteTextWithWhitespace()
-            {
-                const string testSentence = "This is a sentence.";
-                const string editText = " \t\r\n\f\v ";
-                const string expectedText = "This is a sentence.";
-                const int startIndex = 11;
-                IPencil pencil = MakePencil();
-                _paper.Text = testSentence;
-
-                pencil.Edit(_paper, editText, startIndex);
-
-                Assert.Equal(expectedText, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldOverwriteWhitespaceWithOtherWhitespace()
-            {
-                const string testWhitespace = "               ";
-                const string editText = " \t\r\n\f\v ";
-                const string expectedText = "    \t\r\n\f\v      ";
-                const int startIndex = 3;
-                IPencil pencil = MakePencil();
-                _paper.Text = testWhitespace;
-
-                pencil.Edit(_paper, editText, startIndex);
-
-                Assert.Equal(expectedText, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldAppendToPaperWhenStartIndexIsTooLarge()
-            {
-                const string testSentence = "This is a sentence.";
-                const string editText = " This is another sentence.";
-                const string expectedText = "This is a sentence. This is another sentence.";
-                const int startIndex = 19;
-                IPencil pencil = MakePencil();
-                _paper.Text = testSentence;
-
-                pencil.Edit(_paper, editText, startIndex);
-
-                Assert.Equal(expectedText, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldOverwriteBeyondExistingTextLength()
-            {
-                const string paperText = "          ";
-                const string editText = "This is a sentence.";
-                const string expectedText = "     This is a sentence.";
-                const int startIndex = 5;
-                IPencil pencil = MakePencil();
-                _paper.Text = paperText;
-
-                pencil.Edit(_paper, editText, startIndex);
-
-                Assert.Equal(expectedText, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldCorrectlyConflictWithTextAndOverwriteWhitespace()
-            {
-                const string testWhitespace = "This is a sentence.";
-                const string editText = "overwrite";
-                const string expectedText = "Thi@v@@w@i@@ntence.";
-                const int startIndex = 3;
-                IPencil pencil = MakePencil();
-                _paper.Text = testWhitespace;
-
-                pencil.Edit(_paper, editText, startIndex);
-
-                Assert.Equal(expectedText, _paper.Text);
-            }
-
-            [Fact]
-            public void ShouldSetNegativeStartIndexToZero()
-            {
-                const string textSentence = "          ";
-                const string editText = "Negative";
-                const string expectedText = "Negative  ";
-                const int startIndex = -20;
-                IPencil pencil = MakePencil();
-                _paper.Text = textSentence;
-
-                pencil.Edit(_paper, editText, startIndex);
-
-                Assert.Equal(expectedText, _paper.Text);
-            }
-
-            // Point degradation should act the same as normal writing.
-            // Degrade normally as if the character was written and "@" wasn't
         }
 
         public class Sharpening : PencilTests

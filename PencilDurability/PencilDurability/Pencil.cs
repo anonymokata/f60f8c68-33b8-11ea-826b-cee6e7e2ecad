@@ -87,44 +87,14 @@ namespace PencilDurability
                 return;
             }
 
-            var paperText = new StringBuilder(paper.Text);
-            int endIndex = editText.Length + startIndex;
-            if (endIndex >= paperText.Length)
-            {
-                int overlapLength = paperText.Length - startIndex;
-                int excessLength = editText.Length - overlapLength;
-                paperText.Append(new string(_FillerCharacter, excessLength));
-            }
+            StringBuilder adjustedText = GetAdjustedPaperText(paper.Text, editText.Length, startIndex);
+            string originalTextSection = adjustedText.ToString().Substring(startIndex, editText.Length);
+            var replacementText = GetEditReplacementText(originalTextSection, editText);
 
-            string originalTextSection = paperText.ToString().Substring(startIndex, editText.Length);
+            adjustedText.Remove(startIndex, replacementText.Length);
+            adjustedText.Insert(startIndex, replacementText);
 
-            var replacementText = new StringBuilder();
-            for (int i = 0; i < originalTextSection.Length; i++)
-            {
-                string originalCharecter = originalTextSection[i].ToString();
-                string editCharecter = editText[i].ToString();
-
-                if (HasNonWhitespace(originalCharecter))
-                {
-                    if (HasNonWhitespace(editCharecter))
-                    {
-                        replacementText.Append(_EditConflictCharacter);
-                    }
-                    else
-                    {
-                        replacementText.Append(originalCharecter);
-                    }
-                }
-                else
-                {
-                    replacementText.Append(editCharecter);
-                }
-            }
-
-            paperText.Remove(startIndex, replacementText.Length);
-            paperText.Insert(startIndex, replacementText);
-
-            paper.Text = paperText.ToString();
+            paper.Text = adjustedText.ToString();
         }
 
         public void Sharpen()
@@ -154,6 +124,48 @@ namespace PencilDurability
 
                 return GetAdjustedEraseMatchText(firstHalf, newCount) + adjustedText;
             }
+        }
+
+        private StringBuilder GetAdjustedPaperText(string paperText, int editLength, int startIndex)
+        {
+            var adjustedText = new StringBuilder(paperText);
+            int endIndex = editLength + startIndex;
+            if (endIndex >= adjustedText.Length)
+            {
+                int overlapLength = adjustedText.Length - startIndex;
+                int excessLength = editLength - overlapLength;
+                adjustedText.Append(new string(_FillerCharacter, excessLength));
+            }
+
+            return adjustedText;
+        }
+
+        private string GetEditReplacementText(string originalTextSection, string editText)
+        {
+            var replacementText = new StringBuilder();
+            for (int i = 0; i < originalTextSection.Length; i++)
+            {
+                string originalCharecter = originalTextSection[i].ToString();
+                string editCharecter = editText[i].ToString();
+
+                if (HasNonWhitespace(originalCharecter))
+                {
+                    if (HasNonWhitespace(editCharecter))
+                    {
+                        replacementText.Append(_EditConflictCharacter);
+                    }
+                    else
+                    {
+                        replacementText.Append(originalCharecter);
+                    }
+                }
+                else
+                {
+                    replacementText.Append(editCharecter);
+                }
+            }
+
+            return replacementText.ToString();
         }
 
         private int GetNonWhitespaceCount(string text)

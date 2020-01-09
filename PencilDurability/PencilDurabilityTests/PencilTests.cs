@@ -696,7 +696,7 @@ namespace PencilDurabilityTests
                 }
             }
 
-            public class WithEnoughDurability : Editing
+            public class WithDurability : Editing
             {
                 [Fact]
                 public void ShouldCorrectlyDegradeWhenAppendedToTheEnd()
@@ -714,10 +714,23 @@ namespace PencilDurabilityTests
                     Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
 
-                // point should dull when text is added in middle of text
-                // point should not degrade for conflict character being written.
+                [Fact]
+                public void ShouldCorrectlyDegradeWhenOverwritingText()
+                {
+                    const string testSentence = "This is a sentence.";
+                    const string editText = "overwrite";
+                    const int startIndex = 3;
+                    const int pointDurability = 129;
+                    const int expectedDurability = 120;
+                    IPencil pencil = MakePencil(pointDurability: pointDurability);
+                    _paper.Text = testSentence;
 
-                // helper method adjusts point durability.... don't need many tests here?
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
+                }
+
+                // should stop writing without enough durability
             }
         }
 

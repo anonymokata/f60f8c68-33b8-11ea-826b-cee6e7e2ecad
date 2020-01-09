@@ -151,6 +151,8 @@ namespace PencilDurability
                 string originalCharecter = originalTextSection[i].ToString();
                 string editCharecter = editText[i].ToString();
 
+                AdjustPointDurability(editCharecter);
+
                 if (HasNonWhitespace(originalCharecter))
                 {
                     if (HasNonWhitespace(editCharecter))

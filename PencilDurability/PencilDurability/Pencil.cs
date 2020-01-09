@@ -86,7 +86,7 @@ namespace PencilDurability
 
             if (startIndex >= paper.Text.Length)
             {
-                paper.Text += editText;
+                Write(paper, editText);
                 return;
             }
 

@@ -696,9 +696,24 @@ namespace PencilDurabilityTests
                 }
             }
 
-            public class WithEnoughDurability
+            public class WithEnoughDurability : Editing
             {
-                // starting index too large should use WriteMethod? (unable to explicitly test this method gets called)
+                [Fact]
+                public void ShouldCorrectlyDegradeWhenAppendedToTheEnd()
+                {
+                    const string testSentence = "This is a sentence.";
+                    const string editText = " This is another sentence.";
+                    const int startIndex = 19;
+                    const int pointDurability = 123;
+                    const int expectedDurability = 100;
+                    IPencil pencil = MakePencil(pointDurability: pointDurability);
+                    _paper.Text = testSentence;
+
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
+                }
+
                 // point should dull when text is added in middle of text
                 // point should not degrade for conflict character being written.
 

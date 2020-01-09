@@ -39,9 +39,9 @@ namespace PencilDurability
             for (int i = 0; i < text.Length; i++)
             {
                 string currentCharacter = text[i].ToString();
-                bool canWrite = AdjustPointDurability(currentCharacter);
+                bool canWriteNonWhitespace = AdjustPointDurability(currentCharacter);
 
-                if (!canWrite && HasNonWhitespace(currentCharacter))
+                if (!canWriteNonWhitespace && HasNonWhitespace(currentCharacter))
                 {
                     stringBuilder.Append(_WriteFailedCharacter);
                 }
@@ -151,9 +151,9 @@ namespace PencilDurability
                 string originalCharecter = originalTextSection[i].ToString();
                 string editCharecter = editText[i].ToString();
 
-                bool canWrite = AdjustPointDurability(editCharecter);
+                bool canWriteNonWhitespace = AdjustPointDurability(editCharecter);
 
-                if (!canWrite)
+                if (!canWriteNonWhitespace && HasNonWhitespace(editCharecter))
                 {
                     replacementText.Append(originalCharecter);
                     continue;

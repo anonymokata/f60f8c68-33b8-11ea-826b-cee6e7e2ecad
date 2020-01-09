@@ -12,8 +12,8 @@ namespace PencilDurability
         private const int _UppercaseDegradeValue = 2;
 
         private const string _WriteFailedCharacter = " ";
+        private const string _EditConflictCharacter = "@";
         private const char _FillerCharacter = ' ';
-        private const char _EditConflictCharacter = '@';
 
         private const string _matchNonWhitespace = @"\S";
         const string _matchAllStartWhitespace = @"^\s+";
@@ -151,29 +151,21 @@ namespace PencilDurability
                 string originalCharecter = originalTextSection[i].ToString();
                 string editCharecter = editText[i].ToString();
 
-                bool canWriteNonWhitespace = AdjustPointDurability(editCharecter);
+                bool cantWriteNonWhitespace = !AdjustPointDurability(editCharecter);
 
-                if (!canWriteNonWhitespace && HasNonWhitespace(editCharecter))
+                string replacementCharacter = editCharecter;
+                if (cantWriteNonWhitespace && HasNonWhitespace(editCharecter))
                 {
-                    replacementText.Append(originalCharecter);
-                    continue;
+                    replacementCharacter = originalCharecter;
+                }
+                else if (HasNonWhitespace(originalCharecter))
+                {
+                    replacementCharacter = HasNonWhitespace(editCharecter)
+                                          ? _EditConflictCharacter
+                                          : originalCharecter;
                 }
 
-                if (HasNonWhitespace(originalCharecter))
-                {
-                    if (HasNonWhitespace(editCharecter))
-                    {
-                        replacementText.Append(_EditConflictCharacter);
-                    }
-                    else
-                    {
-                        replacementText.Append(originalCharecter);
-                    }
-                }
-                else
-                {
-                    replacementText.Append(editCharecter);
-                }
+                replacementText.Append(replacementCharacter);
             }
 
             return replacementText.ToString();

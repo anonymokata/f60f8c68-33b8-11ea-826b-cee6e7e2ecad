@@ -87,28 +87,42 @@ namespace PencilDurability
                 return;
             }
 
-            if (editText.Length + startIndex >= paper.Text.Length)
-            {
-                int overlapLength = paper.Text.Length - startIndex;
-                int excessLength =  editText.Length - overlapLength;
-                paper.Text += new string(_FillerCharacter, excessLength);
-            }
-
-            string textToReplace = paper.Text.Substring(startIndex, editText.Length);
-
-            if (HasNonWhitespace(textToReplace))
-            {
-                if (!HasNonWhitespace(editText))
-                {
-                    return;
-                }
-
-                editText = new string(_EditConflictCharacter, textToReplace.Length);
-            }
-
             var paperText = new StringBuilder(paper.Text);
-            paperText.Remove(startIndex, editText.Length);
-            paperText.Insert(startIndex, editText);
+            int endIndex = editText.Length + startIndex;
+            if (endIndex >= paperText.Length)
+            {
+                int overlapLength = paperText.Length - startIndex;
+                int excessLength = editText.Length - overlapLength;
+                paperText.Append(new string(_FillerCharacter, excessLength));
+            }
+
+            string originalTextSection = paperText.ToString().Substring(startIndex, editText.Length);
+
+            var replacementText = new StringBuilder();
+            for (int i = 0; i < originalTextSection.Length; i++)
+            {
+                string originalCharecter = originalTextSection[i].ToString();
+                string editCharecter = editText[i].ToString();
+
+                if (HasNonWhitespace(originalCharecter))
+                {
+                    if (HasNonWhitespace(editCharecter))
+                    {
+                        replacementText.Append(_EditConflictCharacter);
+                    }
+                    else
+                    {
+                        replacementText.Append(originalCharecter);
+                    }
+                }
+                else
+                {
+                    replacementText.Append(editCharecter);
+                }
+            }
+
+            paperText.Remove(startIndex, replacementText.Length);
+            paperText.Insert(startIndex, replacementText);
 
             paper.Text = paperText.ToString();
         }

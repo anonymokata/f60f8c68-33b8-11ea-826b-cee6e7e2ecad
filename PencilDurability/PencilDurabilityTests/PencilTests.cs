@@ -678,7 +678,22 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedText, _paper.Text);
             }
 
-            // If given a string that has spaces, original text is kept.
+            [Fact]
+            public void ShouldCorrectlyConflictWithTextAndOverwriteWhitespace()
+            {
+                const string testWhitespace = "This is a sentence.";
+                const string editText = "overwrite";
+                const string expectedText = "Thi@v@@w@i@@ntence.";
+                const int startIndex = 3;
+                IPencil pencil = MakePencil();
+                _paper.Text = testWhitespace;
+
+                pencil.Edit(_paper, editText, startIndex);
+
+                Assert.Equal(expectedText, _paper.Text);
+            }
+
+            // what if start index is negative
 
             // Point degradation should act the same as normal writing.
             // Degrade normally as if the character was written and "@" wasn't

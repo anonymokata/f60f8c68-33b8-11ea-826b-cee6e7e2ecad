@@ -92,7 +92,7 @@ namespace PencilDurability
 
             StringBuilder adjustedText = GetAdjustedPaperText(paper.Text, editText.Length, startIndex);
             string originalTextSection = adjustedText.ToString().Substring(startIndex, editText.Length);
-            var replacementText = GetEditReplacementText(originalTextSection, editText);
+            string replacementText = GetEditReplacementText(originalTextSection, editText);
 
             adjustedText.Remove(startIndex, replacementText.Length);
             adjustedText.Insert(startIndex, replacementText);

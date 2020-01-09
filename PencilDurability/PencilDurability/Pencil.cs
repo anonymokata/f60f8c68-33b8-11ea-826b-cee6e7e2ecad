@@ -81,6 +81,9 @@ namespace PencilDurability
 
         public void Edit(IPaper paper, string editText, int startIndex)
         {
+            const int minIndex = 0;
+            startIndex = Math.Max(minIndex, startIndex);
+
             if (startIndex >= paper.Text.Length)
             {
                 paper.Text += editText;

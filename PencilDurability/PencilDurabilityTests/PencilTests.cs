@@ -693,7 +693,20 @@ namespace PencilDurabilityTests
                 Assert.Equal(expectedText, _paper.Text);
             }
 
-            // what if start index is negative
+            [Fact]
+            public void ShouldSetNegativeStartIndexToZero()
+            {
+                const string textSentence = "          ";
+                const string editText = "Negative";
+                const string expectedText = "Negative  ";
+                const int startIndex = -20;
+                IPencil pencil = MakePencil();
+                _paper.Text = textSentence;
+
+                pencil.Edit(_paper, editText, startIndex);
+
+                Assert.Equal(expectedText, _paper.Text);
+            }
 
             // Point degradation should act the same as normal writing.
             // Degrade normally as if the character was written and "@" wasn't

@@ -762,8 +762,21 @@ namespace PencilDurabilityTests
                     Assert.Equal(expectedText, _paper.Text);
                 }
 
-                // only append part to the end if not enough durability (don't add extra spaces)
+                [Fact]
+                public void ShouldAddSpacesBeyondExistingTextLengthIfBecomesDull()
+                {
+                    const string paperText = "          ";
+                    const string editText = "This is a sentence.";
+                    const string expectedText = "     This is a          ";
+                    const int startIndex = 5;
+                    const int pointDurability = 8;
+                    IPencil pencil = MakePencil(pointDurability: pointDurability);
+                    _paper.Text = paperText;
 
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedText, _paper.Text);
+                }
             }
         }
 

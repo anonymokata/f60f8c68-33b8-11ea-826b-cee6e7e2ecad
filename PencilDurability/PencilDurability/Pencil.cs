@@ -155,7 +155,8 @@ namespace PencilDurability
 
                 if (!canWrite)
                 {
-                    return replacementText.ToString();
+                    replacementText.Append(originalCharecter);
+                    continue;
                 }
 
                 if (HasNonWhitespace(originalCharecter))

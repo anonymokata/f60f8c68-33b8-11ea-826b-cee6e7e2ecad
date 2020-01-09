@@ -746,8 +746,22 @@ namespace PencilDurabilityTests
                     Assert.Equal(expectedText, _paper.Text);
                 }
 
-                // correctly handle "tT", point = 2
-                // correctly handle "Tt", point = 1
+                [Fact]
+                public void ShouldNotWriteUppercaseIfNotEnoughDurability()
+                {
+                    const string testText = "Word     Word";
+                    const string editText = "tTt";
+                    const string expectedText = "Word t t Word";
+                    const int startindex = 5;
+                    const int pointDurability = 2;
+                    IPencil pencil = MakePencil(pointDurability: pointDurability);
+                    _paper.Text = testText;
+
+                    pencil.Edit(_paper, editText, startindex);
+
+                    Assert.Equal(expectedText, _paper.Text);
+                }
+
                 // only append part to the end if not enough durability (don't add extra spaces)
 
             }

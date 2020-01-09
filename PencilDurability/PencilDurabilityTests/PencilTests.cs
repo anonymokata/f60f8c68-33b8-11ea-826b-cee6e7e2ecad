@@ -11,14 +11,16 @@ namespace PencilDurabilityTests
         private const int _arbitraryLength = 99999;
         private const int _arbitraryEraserDurability = 999999;
 
+        // TODO: edit test: ShouldKeepWhitespaceInMiddleOfText
+
         public PencilTests()
         {
             _paper = new Paper();
         }
 
         private IPencil MakePencil(int pointDurability = _arbitraryDurability,
-                                  int length = _arbitraryLength,
-                                  int eraserDurability = _arbitraryEraserDurability)
+                                   int length = _arbitraryLength,
+                                   int eraserDurability = _arbitraryEraserDurability)
         {
             return new Pencil(pointDurability, length, eraserDurability);
         }
@@ -26,7 +28,7 @@ namespace PencilDurabilityTests
         public class Initialization : PencilTests
         {
             [Fact]
-            public void ForNegativeDurabilityShouldMakeValuePositive()
+            public void ShouldMakeValuePositiveForNegativeDurability()
             {
                 const int negativeDurability = -10;
                 const int expectedDurability = 10;
@@ -37,7 +39,7 @@ namespace PencilDurabilityTests
             }
 
             [Fact]
-            public void ForNegativeDurabilityShouldSharpenToThePositiveValue()
+            public void ShouldSharpenToThePositiveValueForNegativeDurability()
             {
                 const int negativeDurability = -10;
                 const int expectedDurability = 10;
@@ -49,7 +51,7 @@ namespace PencilDurabilityTests
             }
 
             [Fact]
-            public void ForNegativeLengthShouldMakeValuePositive()
+            public void ShouldMakeValuePositiveForNegativeLength()
             {
                 const int negativeLength = -10;
                 const int expectedLength = 10;
@@ -60,7 +62,7 @@ namespace PencilDurabilityTests
             }
 
             [Fact]
-            public void ForNegativeEraserDurabilityShouldMakeValuePositive()
+            public void ShouldMakeValuePositiveForNegativeEraserDurability()
             {
                 const int negativeEraserDurability = -10;
                 const int expectedEraserDurability = 10;
@@ -143,7 +145,7 @@ namespace PencilDurabilityTests
                 }
 
                 [Fact]
-                public void ShouldAppendToPreExistingText()
+                public void ShouldAppendToExistingText()
                 {
                     const string testSentence1 = "This is a sentence";
                     const string testSentence2 = " This is another sentence";
@@ -257,7 +259,7 @@ namespace PencilDurabilityTests
                 [InlineData("321654987")]
                 [InlineData(")(*&^%%#$@#$!~`_+-=")]
                 [InlineData("{}:\">?<[];',.|\\")]
-                public void ShouldDegradCorrectlyforManyRancomCharecters(string miscCharacters)
+                public void ShouldDegradCorrectlyforManyRandomCharacters(string miscCharacters)
                 {
                     const int startDurability = 20;
                     int expectedDurability = startDurability - miscCharacters.Length;
@@ -339,7 +341,7 @@ namespace PencilDurabilityTests
                 [Theory]
                 [InlineData("sometext", "        ")]
                 [InlineData("sometextvaryinglength", "                     ")]
-                public void ShouldReplaceMatchingTextWithSpaces(string testWord, string expected)
+                public void ShouldReplaceMatchingTextWithCorrectAmountOfSpaces(string testWord, string expected)
                 {
                     IPencil pencil = MakePencil();
                     _paper.Text = testWord;
@@ -404,7 +406,7 @@ namespace PencilDurabilityTests
                 }
 
                 [Fact]
-                public void ShouldNotIgnoreCaseWhenMatching()
+                public void ShouldMatchOnCaseWhenMatching()
                 {
                     const string testSentence = "This but not this";
                     const string eraseWord = "This";
@@ -591,7 +593,7 @@ namespace PencilDurabilityTests
                 }
 
                 [Fact]
-                public void ShouldOverwritePreExistingTextWithConflictCharacter()
+                public void ShouldOverwriteExistingTextWithConflictCharacter()
                 {
                     const string paperText = "This is a sentence.";
                     const string editText = "Added";

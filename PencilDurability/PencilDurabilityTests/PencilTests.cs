@@ -6,23 +6,22 @@ namespace PencilDurabilityTests
 {
     public class PencilTests
     {
-        private readonly IPaper _paper;
         private const int _arbitraryDurability = 999999;
         private const int _arbitraryLength = 99999;
         private const int _arbitraryEraserDurability = 999999;
 
         // TODO: edit test: ShouldKeepWhitespaceInMiddleOfText
 
-        public PencilTests()
-        {
-            _paper = new Paper();
-        }
-
         private IPencil MakePencil(int pointDurability = _arbitraryDurability,
                                    int length = _arbitraryLength,
                                    int eraserDurability = _arbitraryEraserDurability)
         {
             return new Pencil(pointDurability, length, eraserDurability);
+        }
+
+        private IPaper GetPaper(string paperText = "")
+        {
+            return new Paper() { Text = paperText };
         }
 
         public class Initialization : PencilTests
@@ -84,10 +83,11 @@ namespace PencilDurabilityTests
                     const string testSentence = "This should not be written.";
                     const string expectedSpaces = "                           ";
                     IPencil pencil = MakePencil(pointDurability: noDurability);
+                    IPaper paper = GetPaper();
 
-                    pencil.Write(_paper, testSentence);
+                    pencil.Write(paper, testSentence);
 
-                    Assert.Equal(expectedSpaces, _paper.Text);
+                    Assert.Equal(expectedSpaces, paper.Text);
                 }
 
                 [Fact]
@@ -98,11 +98,11 @@ namespace PencilDurabilityTests
                     const string testSentence = " This should not be written.";
                     const string expectedSpaces = "                            ";
                     IPencil pencil = MakePencil(pointDurability: noDurability);
-                    _paper.Text = preexistingText;
+                    IPaper paper = GetPaper(preexistingText);
 
-                    pencil.Write(_paper, testSentence);
+                    pencil.Write(paper, testSentence);
 
-                    Assert.Equal(preexistingText + expectedSpaces, _paper.Text);
+                    Assert.Equal(preexistingText + expectedSpaces, paper.Text);
                 }
 
                 [Fact]
@@ -111,10 +111,11 @@ namespace PencilDurabilityTests
                     const int noDurability = 0;
                     const string testWhitespace = "  \t\r\n\f\v  ";
                     IPencil pencil = MakePencil(pointDurability: noDurability);
+                    IPaper paper = GetPaper();
 
-                    pencil.Write(_paper, testWhitespace);
+                    pencil.Write(paper, testWhitespace);
 
-                    Assert.Equal(testWhitespace, _paper.Text);
+                    Assert.Equal(testWhitespace, paper.Text);
                 }
 
                 [Fact]
@@ -124,10 +125,11 @@ namespace PencilDurabilityTests
                     const string testSentence = "\vT\this is a\t sentence\n with whi\r\ntespace chara\ncters.\f";
                     const string expectedText = "\v \t        \t         \n         \r\n             \n      \f";
                     IPencil pencil = MakePencil(pointDurability: noDurability);
+                    IPaper paper = GetPaper();
 
-                    pencil.Write(_paper, testSentence);
+                    pencil.Write(paper, testSentence);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
             }
 
@@ -138,10 +140,11 @@ namespace PencilDurabilityTests
                 {
                     const string testSentence = "This is a sentence";
                     IPencil pencil = MakePencil();
+                    IPaper paper = GetPaper();
 
-                    pencil.Write(_paper, testSentence);
+                    pencil.Write(paper, testSentence);
 
-                    Assert.Equal(testSentence, _paper.Text);
+                    Assert.Equal(testSentence, paper.Text);
                 }
 
                 [Fact]
@@ -150,11 +153,11 @@ namespace PencilDurabilityTests
                     const string testSentence1 = "This is a sentence";
                     const string testSentence2 = " This is another sentence";
                     IPencil pencil = MakePencil();
-                    _paper.Text = testSentence1;
+                    IPaper paper = GetPaper(testSentence1);
 
-                    pencil.Write(_paper, testSentence2);
+                    pencil.Write(paper, testSentence2);
 
-                    Assert.Equal(testSentence1 + testSentence2, _paper.Text);
+                    Assert.Equal(testSentence1 + testSentence2, paper.Text);
                 }
 
                 [Fact]
@@ -164,10 +167,11 @@ namespace PencilDurabilityTests
                     const string testSentence = "This should not be written and This should not be written";
                     const string expectedSentence = "This should not be written and                           ";
                     IPencil pencil = MakePencil(pointDurability: durability);
+                    IPaper paper = GetPaper();
 
-                    pencil.Write(_paper, testSentence);
+                    pencil.Write(paper, testSentence);
 
-                    Assert.Equal(expectedSentence, _paper.Text);
+                    Assert.Equal(expectedSentence, paper.Text);
                 }
 
                 [Fact]
@@ -177,10 +181,11 @@ namespace PencilDurabilityTests
                     const string testString = "aTat";
                     const string expectedText = "a a ";
                     IPencil pencil = MakePencil(pointDurability: startDurability);
+                    IPaper paper = GetPaper();
 
-                    pencil.Write(_paper, testString);
+                    pencil.Write(paper, testString);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
 
                 [Fact]
@@ -191,7 +196,7 @@ namespace PencilDurabilityTests
                     const int startDurability = 5;
                     IPencil pencil = MakePencil(pointDurability: startDurability);
 
-                    pencil.Write(_paper, lowercaseLetter);
+                    pencil.Write(GetPaper(), lowercaseLetter);
 
                     Assert.Equal(startDurability - lowercaseDegradeValue, pencil.CurrentPointDurability);
                 }
@@ -207,7 +212,7 @@ namespace PencilDurabilityTests
                     int expectedDurability = startDurability - lowercaseLetters.Length;
                     IPencil pencil = MakePencil(pointDurability: startDurability);
 
-                    pencil.Write(_paper, lowercaseLetters);
+                    pencil.Write(GetPaper(), lowercaseLetters);
 
                     Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
@@ -220,7 +225,7 @@ namespace PencilDurabilityTests
                     const int startDurability = 5;
                     IPencil pencil = MakePencil(pointDurability: startDurability);
 
-                    pencil.Write(_paper, uppercaseLetter);
+                    pencil.Write(GetPaper(), uppercaseLetter);
 
                     Assert.Equal(startDurability - uppercaseDegradeValue, pencil.CurrentPointDurability);
                 }
@@ -237,7 +242,7 @@ namespace PencilDurabilityTests
                     int expectedDurability = startDurability - (uppercaseLetters.Length * uppercaseDegradeValue);
                     IPencil pencil = MakePencil(pointDurability: startDurability);
 
-                    pencil.Write(_paper, uppercaseLetters);
+                    pencil.Write(GetPaper(), uppercaseLetters);
 
                     Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
@@ -250,7 +255,7 @@ namespace PencilDurabilityTests
                     const int expectedDurability = 4;
                     IPencil pencil = MakePencil(pointDurability: startDurability);
 
-                    pencil.Write(_paper, otherCharecter);
+                    pencil.Write(GetPaper(), otherCharecter);
 
                     Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
@@ -265,7 +270,7 @@ namespace PencilDurabilityTests
                     int expectedDurability = startDurability - miscCharacters.Length;
                     IPencil pencil = MakePencil(pointDurability: startDurability);
 
-                    pencil.Write(_paper, miscCharacters);
+                    pencil.Write(GetPaper(), miscCharacters);
 
                     Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
@@ -283,7 +288,7 @@ namespace PencilDurabilityTests
                     int expectedDurability = startDurability - degradeAmount;
                     IPencil pencil = MakePencil(pointDurability: startDurability);
 
-                    pencil.Write(_paper, mixedCase);
+                    pencil.Write(GetPaper(), mixedCase);
 
                     Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
@@ -301,7 +306,7 @@ namespace PencilDurabilityTests
                     int expectedDurability = startDurability - degradeAmount;
                     IPencil pencil = MakePencil(pointDurability: startDurability);
 
-                    pencil.Write(_paper, mixedString);
+                    pencil.Write(GetPaper(), mixedString);
 
                     Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
@@ -315,7 +320,7 @@ namespace PencilDurabilityTests
                     const int noDurability = 0;
                     IPencil pencil = MakePencil(pointDurability: startDurability);
 
-                    pencil.Write(_paper, sentence);
+                    pencil.Write(GetPaper(), sentence);
 
                     Assert.Equal(noDurability, pencil.CurrentPointDurability);
                 }
@@ -331,11 +336,11 @@ namespace PencilDurabilityTests
                 {
                     const string testWord = "word";
                     IPencil pencil = MakePencil();
-                    _paper.Text = testWord;
+                    IPaper paper = GetPaper(testWord);
 
-                    pencil.Erase(_paper, testWord);
+                    pencil.Erase(paper, testWord);
 
-                    Assert.DoesNotContain(testWord, _paper.Text);
+                    Assert.DoesNotContain(testWord, paper.Text);
                 }
 
                 [Theory]
@@ -344,11 +349,11 @@ namespace PencilDurabilityTests
                 public void ShouldReplaceMatchingTextWithCorrectAmountOfSpaces(string testWord, string expected)
                 {
                     IPencil pencil = MakePencil();
-                    _paper.Text = testWord;
+                    IPaper paper = GetPaper(testWord);
 
-                    pencil.Erase(_paper, testWord);
+                    pencil.Erase(paper, testWord);
 
-                    Assert.Equal(expected, _paper.Text);
+                    Assert.Equal(expected, paper.Text);
                 }
 
                 [Fact]
@@ -358,11 +363,11 @@ namespace PencilDurabilityTests
                     const string eraseWord = "test";
                     const string expectedSentence = "this is a      sentence";
                     IPencil pencil = MakePencil();
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Erase(_paper, eraseWord);
+                    pencil.Erase(paper, eraseWord);
 
-                    Assert.Equal(expectedSentence, _paper.Text);
+                    Assert.Equal(expectedSentence, paper.Text);
                 }
 
                 [Fact]
@@ -372,11 +377,11 @@ namespace PencilDurabilityTests
                     const string eraseWord = "this";
                     const string expectedSentence = "Not this but     ";
                     IPencil pencil = MakePencil();
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Erase(_paper, eraseWord);
+                    pencil.Erase(paper, eraseWord);
 
-                    Assert.Equal(expectedSentence, _paper.Text);
+                    Assert.Equal(expectedSentence, paper.Text);
                 }
 
                 [Fact]
@@ -385,11 +390,11 @@ namespace PencilDurabilityTests
                     const string testSentence = "Not this or this";
                     const string eraseWord = "test";
                     IPencil pencil = MakePencil();
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Erase(_paper, eraseWord);
+                    pencil.Erase(paper, eraseWord);
 
-                    Assert.Equal(testSentence, _paper.Text);
+                    Assert.Equal(testSentence, paper.Text);
                 }
 
                 [Fact]
@@ -398,11 +403,11 @@ namespace PencilDurabilityTests
                     const string testWhitespace = "  \t\r\n\f\v  ";
                     const string expected = "         ";
                     IPencil pencil = MakePencil();
-                    _paper.Text = testWhitespace;
+                    IPaper paper = GetPaper(testWhitespace);
 
-                    pencil.Erase(_paper, testWhitespace);
+                    pencil.Erase(paper, testWhitespace);
 
-                    Assert.Equal(expected, _paper.Text);
+                    Assert.Equal(expected, paper.Text);
                 }
 
                 [Fact]
@@ -412,11 +417,11 @@ namespace PencilDurabilityTests
                     const string eraseWord = "This";
                     const string expectedSentence = "     but not this";
                     IPencil pencil = MakePencil();
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Erase(_paper, eraseWord);
+                    pencil.Erase(paper, eraseWord);
 
-                    Assert.Equal(expectedSentence, _paper.Text);
+                    Assert.Equal(expectedSentence, paper.Text);
                 }
 
                 [Fact]
@@ -427,9 +432,9 @@ namespace PencilDurabilityTests
                     const int eraserDurability = 5;
                     const int expectedDurability = 4;
                     IPencil pencil = MakePencil(eraserDurability: eraserDurability);
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Erase(_paper, eraseLetter);
+                    pencil.Erase(paper, eraseLetter);
 
                     Assert.Equal(expectedDurability, pencil.CurrentEraserDurability);
                 }
@@ -443,9 +448,9 @@ namespace PencilDurabilityTests
                     const int startEraserDurability = 50;
                     int expectedEraserDurability = startEraserDurability - eraseMatch.Length;
                     IPencil pencil = MakePencil(eraserDurability: startEraserDurability);
-                    _paper.Text = eraseMatch;
+                    IPaper paper = GetPaper(eraseMatch);
 
-                    pencil.Erase(_paper, eraseMatch);
+                    pencil.Erase(paper, eraseMatch);
 
                     Assert.Equal(expectedEraserDurability, pencil.CurrentEraserDurability);
                 }
@@ -459,9 +464,9 @@ namespace PencilDurabilityTests
                     const int startEraserDurability = 50;
                     int expectedEraserDurability = startEraserDurability - degradeAmount;
                     IPencil pencil = MakePencil(eraserDurability: startEraserDurability);
-                    _paper.Text = mixedString;
+                    IPaper paper = GetPaper(mixedString);
 
-                    pencil.Erase(_paper, mixedString);
+                    pencil.Erase(paper, mixedString);
 
                     Assert.Equal(expectedEraserDurability, pencil.CurrentEraserDurability);
                 }
@@ -475,11 +480,11 @@ namespace PencilDurabilityTests
                     const string testSentence = "  \v0?>9\n<8:6 (*4&\t^2# 1$%  ";
                     const int eraserDurability = 0;
                     IPencil pencil = MakePencil(eraserDurability: eraserDurability);
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Erase(_paper, testSentence);
+                    pencil.Erase(paper, testSentence);
 
-                    Assert.Equal(testSentence, _paper.Text);
+                    Assert.Equal(testSentence, paper.Text);
                 }
 
                 [Fact]
@@ -489,11 +494,11 @@ namespace PencilDurabilityTests
                     const string expectedWord = "wo  ";
                     const int eraserDurability = 2;
                     IPencil pencil = MakePencil(eraserDurability: eraserDurability);
-                    _paper.Text = testWord;
+                    IPaper paper = GetPaper(testWord);
 
-                    pencil.Erase(_paper, testWord);
+                    pencil.Erase(paper, testWord);
 
-                    Assert.Equal(expectedWord, _paper.Text);
+                    Assert.Equal(expectedWord, paper.Text);
                 }
 
                 [Fact]
@@ -504,11 +509,11 @@ namespace PencilDurabilityTests
                     const string expectedSentence = "This is a wo   in a sentence.";
                     const int eraserDurability = 2;
                     IPencil pencil = MakePencil(eraserDurability: eraserDurability);
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Erase(_paper, testWord);
+                    pencil.Erase(paper, testWord);
 
-                    Assert.Equal(expectedSentence, _paper.Text);
+                    Assert.Equal(expectedSentence, paper.Text);
                 }
 
                 [Fact]
@@ -519,11 +524,11 @@ namespace PencilDurabilityTests
                     const string expectedSentence = "This i         sentence.";
                     const int eraserDurability = 6;
                     IPencil pencil = MakePencil(eraserDurability: eraserDurability);
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Erase(_paper, eraseSection);
+                    pencil.Erase(paper, eraseSection);
 
-                    Assert.Equal(expectedSentence, _paper.Text);
+                    Assert.Equal(expectedSentence, paper.Text);
                 }
 
                 [Fact]
@@ -534,11 +539,11 @@ namespace PencilDurabilityTests
                     const string expectedSentence = "th   s running";
                     const int eraserDurability = 3;
                     IPencil pencil = MakePencil(eraserDurability: eraserDurability);
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Erase(_paper, eraseWord);
+                    pencil.Erase(paper, eraseWord);
 
-                    Assert.Equal(expectedSentence, _paper.Text);
+                    Assert.Equal(expectedSentence, paper.Text);
                 }
 
                 [Fact]
@@ -549,11 +554,11 @@ namespace PencilDurabilityTests
                     const string expectedSentence = "This\n\n\n     sentence.";
                     const int eraserDurability = 3;
                     IPencil pencil = MakePencil(eraserDurability: eraserDurability);
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Erase(_paper, eraseMatch);
+                    pencil.Erase(paper, eraseMatch);
 
-                    Assert.Equal(expectedSentence, _paper.Text);
+                    Assert.Equal(expectedSentence, paper.Text);
                 }
 
                 [Theory]
@@ -564,9 +569,9 @@ namespace PencilDurabilityTests
                 {
                     const int expectedDurability = 0;
                     IPencil pencil = MakePencil(eraserDurability: startDurability);
-                    _paper.Text = sentence;
+                    IPaper paper = GetPaper(sentence);
 
-                    pencil.Erase(_paper, sentence);
+                    pencil.Erase(paper, sentence);
 
                     Assert.Equal(expectedDurability, pencil.CurrentEraserDurability);
                 }
@@ -585,11 +590,11 @@ namespace PencilDurabilityTests
                     const string expectedText = " editing ";
                     const int startIndex = 1;
                     IPencil pencil = MakePencil();
-                    _paper.Text = testWhitespace;
+                    IPaper paper = GetPaper(testWhitespace);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
 
                 [Fact]
@@ -600,11 +605,11 @@ namespace PencilDurabilityTests
                     const string expectedText = "This is a se@@@@@e.";
                     const int startIndex = 12;
                     IPencil pencil = MakePencil();
-                    _paper.Text = paperText;
+                    IPaper paper = GetPaper(paperText);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
 
                 [Fact]
@@ -615,11 +620,11 @@ namespace PencilDurabilityTests
                     const string expectedText = "This is a sentence.";
                     const int startIndex = 11;
                     IPencil pencil = MakePencil();
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
 
                 [Fact]
@@ -630,11 +635,11 @@ namespace PencilDurabilityTests
                     const string expectedText = "    \t\r\n\f\v      ";
                     const int startIndex = 3;
                     IPencil pencil = MakePencil();
-                    _paper.Text = testWhitespace;
+                    IPaper paper = GetPaper(testWhitespace);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
 
                 [Fact]
@@ -645,11 +650,11 @@ namespace PencilDurabilityTests
                     const string expectedText = "This is a sentence. This is another sentence.";
                     const int startIndex = 19;
                     IPencil pencil = MakePencil();
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
 
                 [Fact]
@@ -660,11 +665,11 @@ namespace PencilDurabilityTests
                     const string expectedText = "     This is a sentence.";
                     const int startIndex = 5;
                     IPencil pencil = MakePencil();
-                    _paper.Text = paperText;
+                    IPaper paper = GetPaper(paperText);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
 
                 [Fact]
@@ -675,11 +680,11 @@ namespace PencilDurabilityTests
                     const string expectedText = "Thi@v@@w@i@@ntence.";
                     const int startIndex = 3;
                     IPencil pencil = MakePencil();
-                    _paper.Text = testWhitespace;
+                    IPaper paper = GetPaper(testWhitespace);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
 
                 [Fact]
@@ -690,11 +695,11 @@ namespace PencilDurabilityTests
                     const string expectedText = "Negative  ";
                     const int startIndex = -20;
                     IPencil pencil = MakePencil();
-                    _paper.Text = textSentence;
+                    IPaper paper = GetPaper(textSentence);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
             }
 
@@ -709,9 +714,9 @@ namespace PencilDurabilityTests
                     const int pointDurability = 123;
                     const int expectedDurability = 100;
                     IPencil pencil = MakePencil(pointDurability: pointDurability);
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
                     Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
@@ -725,9 +730,9 @@ namespace PencilDurabilityTests
                     const int pointDurability = 129;
                     const int expectedDurability = 120;
                     IPencil pencil = MakePencil(pointDurability: pointDurability);
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
                     Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
@@ -741,11 +746,11 @@ namespace PencilDurabilityTests
                     const int startIndex = 3;
                     const int pointDurability = 5;
                     IPencil pencil = MakePencil(pointDurability: pointDurability);
-                    _paper.Text = testSentence;
+                    IPaper paper = GetPaper(testSentence);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
 
                 [Fact]
@@ -757,11 +762,11 @@ namespace PencilDurabilityTests
                     const int startindex = 5;
                     const int pointDurability = 2;
                     IPencil pencil = MakePencil(pointDurability: pointDurability);
-                    _paper.Text = testText;
+                    IPaper paper = GetPaper(testText);
 
-                    pencil.Edit(_paper, editText, startindex);
+                    pencil.Edit(paper, editText, startindex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
 
                 [Fact]
@@ -773,11 +778,11 @@ namespace PencilDurabilityTests
                     const int startIndex = 5;
                     const int pointDurability = 8;
                     IPencil pencil = MakePencil(pointDurability: pointDurability);
-                    _paper.Text = paperText;
+                    IPaper paper = GetPaper(paperText);
 
-                    pencil.Edit(_paper, editText, startIndex);
+                    pencil.Edit(paper, editText, startIndex);
 
-                    Assert.Equal(expectedText, _paper.Text);
+                    Assert.Equal(expectedText, paper.Text);
                 }
             }
         }
@@ -791,7 +796,7 @@ namespace PencilDurabilityTests
                 const string testSentence = "Text to waste pencil durability for testing sharpening abilities";
                 IPencil pencil = MakePencil(pointDurability: startingDurability);
 
-                pencil.Write(_paper, testSentence);
+                pencil.Write(GetPaper(), testSentence);
                 pencil.Sharpen();
 
                 Assert.Equal(startingDurability, pencil.CurrentPointDurability);
@@ -818,7 +823,7 @@ namespace PencilDurabilityTests
                 const int expectedDurability = 87;
                 IPencil pencil = MakePencil(pointDurability: startingDurability, length: startingLength);
 
-                pencil.Write(_paper, testSentence);
+                pencil.Write(GetPaper(), testSentence);
                 pencil.Sharpen();
 
                 Assert.Equal(expectedDurability, pencil.CurrentPointDurability);

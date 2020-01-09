@@ -730,7 +730,26 @@ namespace PencilDurabilityTests
                     Assert.Equal(expectedDurability, pencil.CurrentPointDurability);
                 }
 
-                // should stop writing without enough durability
+                [Fact]
+                public void ShouldWritePartialEditWhenDurabilityRunsOut()
+                {
+                    const string testSentence = "This is a sentence.";
+                    const string editText = "overwrite";
+                    const string expectedText = "Thi@v@@wa sentence.";
+                    const int startIndex = 3;
+                    const int pointDurability = 5;
+                    IPencil pencil = MakePencil(pointDurability: pointDurability);
+                    _paper.Text = testSentence;
+
+                    pencil.Edit(_paper, editText, startIndex);
+
+                    Assert.Equal(expectedText, _paper.Text);
+                }
+
+                // correctly handle "tT", point = 2
+                // correctly handle "Tt", point = 1
+                // only append part to the end if not enough durability (don't add extra spaces)
+
             }
         }
 

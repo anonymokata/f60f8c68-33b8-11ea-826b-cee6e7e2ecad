@@ -151,7 +151,12 @@ namespace PencilDurability
                 string originalCharecter = originalTextSection[i].ToString();
                 string editCharecter = editText[i].ToString();
 
-                AdjustPointDurability(editCharecter);
+                bool canWrite = AdjustPointDurability(editCharecter);
+
+                if (!canWrite)
+                {
+                    return replacementText.ToString();
+                }
 
                 if (HasNonWhitespace(originalCharecter))
                 {

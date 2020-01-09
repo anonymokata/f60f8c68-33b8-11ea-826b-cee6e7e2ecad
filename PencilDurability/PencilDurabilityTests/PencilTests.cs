@@ -10,8 +10,6 @@ namespace PencilDurabilityTests
         private const int _arbitraryLength = 99999;
         private const int _arbitraryEraserDurability = 999999;
 
-        // TODO: edit test: ShouldKeepWhitespaceInMiddleOfText
-
         private IPencil GetPencil(int pointDurability = _arbitraryDurability,
                                    int length = _arbitraryLength,
                                    int eraserDurability = _arbitraryEraserDurability)
@@ -778,6 +776,22 @@ namespace PencilDurabilityTests
                     const string expectedText = "     This is a          ";
                     const int startIndex = 5;
                     const int pointDurability = 8;
+                    IPencil pencil = GetPencil(pointDurability: pointDurability);
+                    IPaper paper = GetPaper(paperText);
+
+                    pencil.Edit(paper, editText, startIndex);
+
+                    Assert.Equal(expectedText, paper.Text);
+                }
+
+                [Fact]
+                public void ShouldWriteWhitespaceIfNoDurability()
+                {
+                    const string paperText = "Word       Word";
+                    const string editText = "a\t\r\n\f\va";
+                    const string expectedText = "Word \t\r\n\f\v Word";
+                    const int startIndex = 4;
+                    const int pointDurability = 0;
                     IPencil pencil = GetPencil(pointDurability: pointDurability);
                     IPaper paper = GetPaper(paperText);
 

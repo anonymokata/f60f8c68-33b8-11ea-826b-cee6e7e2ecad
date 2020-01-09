@@ -2,7 +2,7 @@
 
 ### Running Build and Tests
 
-* Option 1: A .bat file is available to run.
+* Option 1: `BuildAndTest.bat` is available to run.
 * Option 2: Run these commands where the solution is located:
     * `dotnet restore`
     * `dotnet build`
